@@ -15,7 +15,7 @@ export const experience = [
   {
     id: 'klaviyo',
     company: 'Klaviyo Inc.',
-    role: 'Strategic Finance Analysis Co-op',
+    role: 'Strategic Finance Analyst Co-op',
     duration: 'January 2026 – Present',
     location: 'Boston, MA',
     type: 'finance',
