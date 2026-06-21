@@ -9,7 +9,6 @@ import Hero from './sections/Hero'
 import MeetTheBarista from './sections/MeetTheBarista'
 import WhereITrained from './sections/WhereITrained'
 import HouseSpecialties from './sections/HouseSpecialties'
-import BehindTheCounter from './sections/BehindTheCounter'
 import TheMenu from './sections/TheMenu'
 import TheToolkit from './sections/TheToolkit'
 import WhatsBrewing from './sections/WhatsBrewing'
@@ -49,9 +48,8 @@ export default function App() {
 
             {activeTab === 'menu' && (
               <>
-                <HouseSpecialties />
-                <BehindTheCounter />
                 <TheMenu />
+                <HouseSpecialties />
                 <TheToolkit />
               </>
             )}

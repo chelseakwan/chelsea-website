@@ -1,4 +1,4 @@
-// BehindTheCounter — Experience timeline. Most-recent first, collapsible bullet points.
+// The Menu — Experience timeline. Most-recent first, collapsible bullet points.
 // Finance/quant roles get a caramel accent so recruiters can spot them instantly.
 
 import { useState } from 'react'
@@ -19,7 +19,7 @@ export default function BehindTheCounter() {
   const toggle = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }))
 
   return (
-    <section id="behind-the-counter" className="bg-parchment bg-paper-texture section-padding">
+    <section id="the-menu" className="bg-parchment bg-paper-texture section-padding">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -30,7 +30,7 @@ export default function BehindTheCounter() {
         >
           <p className="font-hand text-caramel text-lg mb-1">experience</p>
           <h2 className="font-serif text-4xl md:text-5xl text-espresso leading-tight">
-            Behind the Counter
+            The Menu
           </h2>
         </motion.div>
 
