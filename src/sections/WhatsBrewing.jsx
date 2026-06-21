@@ -1,40 +1,37 @@
-// WhatsBrewing — "What's Brewing" section at the bottom of the page.
-// Shows current active roles and the upcoming Pericles Capital opportunity.
-// Dark espresso background with animated steam wisps for warmth and energy.
+// WhatsBrewing — Future projects tab. Shows upcoming and in-planning work.
+// Dark espresso background with animated steam wisps.
 
 import { motion } from 'framer-motion'
+import Tag from '../components/Tag'
 
-const brews = [
-  {
-    id: 'klaviyo',
-    status: 'Active',
-    company: 'Klaviyo Inc.',
-    role: 'Strategic Finance Analysis Co-op',
-    since: 'January 2026',
-    description:
-      'Inside a $600M+ ARR B2B SaaS company, transforming $5B+ in spend data into category strategy, leading procurement negotiations, and building automations that scale finance operations.',
-    highlight: '$5B+ spend data · $300K+ negotiations · 6+ automations shipped',
-  },
-  {
-    id: 'disrupt',
-    status: 'Active',
-    company: 'Disrupt FinTech Consulting',
-    role: 'Director of Consulting & Strategy Lead',
-    since: 'May 2025',
-    description:
-      'Leading a 24+ person consulting organization — directing client strategy, running stakeholder meetings, and scaling the org 3× through targeted recruitment and market outreach.',
-    highlight: '24+ consultants · 5 client projects · 300% org growth',
-  },
+const futureProjects = [
   {
     id: 'pericles',
-    status: 'On the horizon',
-    company: 'Pericles Capital',
-    role: 'Incoming Quantitative Analyst',
-    since: 'September 2026',
+    timeframe: 'Starting September 2026',
+    confirmed: true,
+    title: 'Data Center & Commodities Research',
+    org: 'Pericles Capital',
     description:
-      'Researching and backtesting the statistical relationship between data center buildout and its downstream impact on commodity and equity markets.',
-    highlight: 'Statistical correlation · Backtesting · Equities & commodities',
-    upcoming: true,
+      'Backtesting the statistical relationship between data center buildout and its downstream impact on commodity and equity markets. Full quant workflow: data sourcing, factor construction, signal testing, and backtesting infrastructure.',
+    tags: ['Python', 'Quantitative Research', 'Backtesting', 'Statistics', 'Equities'],
+  },
+  {
+    id: 'multi-factor',
+    timeframe: 'In Planning',
+    confirmed: false,
+    title: 'Multi-Factor Portfolio Optimizer',
+    description:
+      'Extending the Markowitz & SIM work into a multi-factor model that incorporates macroeconomic indicators alongside traditional risk factors. Goal: a Python-based backtesting framework with interactive performance visualization.',
+    tags: ['Python', 'NumPy', 'Portfolio Theory', 'Factor Models', 'Matplotlib'],
+  },
+  {
+    id: 'fin-knowledge-graph',
+    timeframe: 'In Planning',
+    confirmed: false,
+    title: 'Financial Knowledge Graph',
+    description:
+      'Building on the Cortex data engineering work — an AI-accessible knowledge graph for financial document analysis, connecting companies, SEC filings, and market events using Neo4j and LLM embeddings for natural language querying.',
+    tags: ['Python', 'Neo4j', 'AI', 'Data Engineering', 'PostgreSQL'],
   },
 ]
 
@@ -58,7 +55,11 @@ function SteamWisps() {
 
 export default function WhatsBrewing() {
   return (
-    <section id="whats-brewing" className="bg-espresso relative overflow-hidden section-padding">
+    <section
+      id="whats-brewing"
+      className="min-h-screen bg-espresso relative overflow-hidden section-padding"
+      aria-label="What's Brewing — future projects"
+    >
       {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-caramel/8 blur-3xl rounded-full" />
@@ -71,60 +72,68 @@ export default function WhatsBrewing() {
           <SteamWisps />
           <motion.div
             initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="pt-6"
+            className="pt-8"
           >
-            <p className="font-hand text-caramel/70 text-lg mb-2">currently on the stove</p>
-            <h2 className="font-serif text-4xl md:text-5xl text-parchment leading-tight">
+            <p className="font-hand text-caramel/70 text-lg mb-2">on the horizon</p>
+            <h2 className="font-serif text-4xl md:text-5xl text-parchment leading-tight mb-4">
               What's Brewing
             </h2>
+            <p className="font-sans text-sm text-white/40 max-w-md mx-auto leading-relaxed">
+              Projects confirmed, in planning, and simmering on the back burner.
+            </p>
           </motion.div>
         </div>
 
-        {/* Cards */}
+        {/* Project cards */}
         <div className="grid md:grid-cols-3 gap-5">
-          {brews.map((brew, i) => (
-            <motion.div
-              key={brew.id}
+          {futureProjects.map((project, i) => (
+            <motion.article
+              key={project.id}
               initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: i * 0.12 }}
               className={`rounded-2xl p-6 flex flex-col gap-4 border ${
-                brew.upcoming
-                  ? 'border-caramel/30 bg-caramel/8'
+                project.confirmed
+                  ? 'border-caramel/40 bg-caramel/8 brew-glow'
                   : 'border-white/10 bg-white/5'
-              } ${!brew.upcoming ? 'brew-glow' : ''}`}
+              }`}
             >
-              {/* Status badge */}
-              <span
-                className={`self-start inline-flex items-center px-3 py-1 rounded-full text-xs font-sans font-semibold ${
-                  brew.upcoming
-                    ? 'bg-caramel/20 text-caramel'
-                    : 'bg-white/10 text-white/70'
-                }`}
-              >
-                {brew.status}
-              </span>
-
-              <div>
-                <h3 className="font-serif text-lg text-parchment leading-snug">{brew.company}</h3>
-                <p className="font-sans text-xs text-white/50 mt-0.5">{brew.role}</p>
-                <p className="font-sans text-xs text-caramel/70 mt-0.5">Since {brew.since}</p>
+              {/* Status */}
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-sans font-semibold ${
+                    project.confirmed
+                      ? 'bg-caramel/25 text-caramel'
+                      : 'bg-white/10 text-white/55'
+                  }`}
+                >
+                  {project.timeframe}
+                </span>
+                {project.confirmed && (
+                  <span className="text-xs font-sans text-caramel/60">confirmed</span>
+                )}
               </div>
 
-              <p className="font-sans text-sm text-white/60 leading-relaxed">
-                {brew.description}
+              {/* Title */}
+              <div>
+                <h3 className="font-serif text-lg text-parchment leading-snug">{project.title}</h3>
+                {project.org && (
+                  <p className="font-sans text-xs text-caramel/70 mt-0.5">{project.org}</p>
+                )}
+              </div>
+
+              <p className="font-sans text-sm text-white/55 leading-relaxed">
+                {project.description}
               </p>
 
-              <div className="mt-auto pt-3 border-t border-white/8">
-                <p className="font-hand text-xs text-caramel/60 leading-relaxed">
-                  {brew.highlight}
-                </p>
+              <div className="flex flex-wrap gap-1.5 mt-auto">
+                {project.tags.map(t => (
+                  <Tag key={t} label={t} variant="chalk" />
+                ))}
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
       </div>
