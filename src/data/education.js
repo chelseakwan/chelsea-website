@@ -1,0 +1,26 @@
+export const education = [
+  {
+    id: 'northeastern',
+    institution: 'Northeastern University',
+    school: "D'Amore-McKim School of Business",
+    degree: 'BS in Mathematics and Business Administration',
+    concentration: 'Fintech',
+    minor: 'Data Science',
+    graduation: 'May 2028',
+    gpa: '3.9',
+    location: 'Boston, MA',
+    honors: ['Honors Program', "Dean's List"],
+    activities: ['Disrupt Consulting', 'Generate', 'Association of Women in Mathematics'],
+    courses: [
+      'Probability and Statistics',
+      'Stochastic Processes',
+      'Differential Equations',
+      'Linear Algebra',
+      'Calculus I–III',
+      'Mathematical Modeling',
+      'Asset Valuation',
+      'Financial Econometrics',
+      'Data Science',
+    ],
+  },
+]
