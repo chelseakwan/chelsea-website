@@ -378,7 +378,7 @@ src/
 
 ## 9. Pages / Routes
 
-Single-page application. All sections live on one scrollable page. No routing required in v1.
+Tabs for each section. About, The Menu, What's Brewing, and Contact should all be their own section on separate tabs.
 
 ---
 
