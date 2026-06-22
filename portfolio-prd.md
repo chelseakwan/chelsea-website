@@ -1,9 +1,9 @@
 # Product Requirements Document
 ## Personal Portfolio Website — The Coffee Shop
 
-**Version:** 1.1  
+**Version:** 1.2  
 **Stack:** React + JavaScript  
-**Status:** Draft  
+**Status:** In Progress  
 **Theme:** Coffee shop — warm, personal, memorable. The metaphor lives in the language and texture; the professional signal lives in the content.
 
 ---
@@ -41,20 +41,20 @@ The coffee shop framing is the wrapper, not the distraction. Every section has a
 
 The coffee shop metaphor applies to **section names, nav labels, microcopy, and visual texture**. It does not apply to job titles, company names, project descriptions, or any content a recruiter needs to read accurately.
 
-| Standard Label | Coffee Shop Label | Notes |
-|---|---|---|
-| Hero / Landing | *(no label needed — just the vibe)* | Warm, inviting, sets the tone |
-| About Me | **Meet the Barista** | First person, conversational |
-| House Specialties | **House Specialties** | New section — quant/finance callout |
-| Experience | **Behind the Counter** | Timeline intact; content unchanged |
-| Projects | **The Menu** | Cards as menu items |
-| Active Projects | **Currently Brewing** | Clear WIP signal |
-| Education | **Where I Trained** | Degree, GPA, coursework — all standard |
-| Skills | **The Toolkit** | Grouped by category, no skill bars |
-| Extras | **Daily Specials** | Certs, awards, volunteering |
-| Contact | **Come Find Me** | Form + links, nothing weird |
-| Nav resume link | **Order the Full Menu** or **Full Résumé** | Always one click away |
-| Footer | *(quiet, standard)* | No need to force the metaphor here |
+| Standard Label | Coffee Shop Label | Tab | Notes |
+|---|---|---|---|
+| Hero / Landing | *(no label needed — just the vibe)* | Home | Warm, inviting, sets the tone |
+| About Me | **Meet the Barista** | About | First person, conversational |
+| Education | **Where I Trained** | About | Degree, GPA, coursework — all standard |
+| Projects | **The Menu** | The Menu | Cards as menu items |
+| House Specialties | **House Specialties** | The Menu | Quant/finance callout |
+| Skills | **The Toolkit** | The Menu | Grouped by category, no skill bars |
+| Experience | **Behind the Counter** | *(not in current build)* | Timeline intact; content unchanged |
+| Future Projects | **What's Brewing** | What's Brewing | Confirmed + in-planning upcoming work |
+| Contact | **Come Find Me** | Come Find Me | Form + links, nothing weird |
+| Nav resume link | **Order the Full Menu** or **Full Résumé** | *(all tabs)* | Always one click away |
+| Extras | **Daily Specials** | *(future)* | Certs, awards, volunteering |
+| Footer | *(quiet, standard)* | — | No need to force the metaphor here |
 
 **Copy principles:**
 - Section intros can lean into the theme lightly ("Here's what's on offer" for projects)
@@ -166,6 +166,8 @@ The coffee shop metaphor applies to **section names, nav labels, microcopy, and 
 
 **Theme label for: Projects**
 
+**Tab: The Menu** (alongside House Specialties and The Toolkit)
+
 **Purpose:** The centerpiece of the site. Show what you've actually built, with real outcomes.
 
 **Content per project:**
@@ -176,16 +178,15 @@ The coffee shop metaphor applies to **section names, nav labels, microcopy, and 
 - Key outcome or metric ("served 200+ users", "reduced runtime by 40%")
 - Links: GitHub, live demo, writeup
 - Screenshot or demo GIF (optional but high-impact)
-- **"Currently Brewing" badge** for active/in-progress projects
 
 **Behavior:**
 - Card grid layout (2–3 columns on desktop, 1 on mobile)
 - Cards styled as menu items — warm paper texture, clean typography
 - Filter by category: All / Finance & Quant / Web & Apps / Data & ML / Other
-- "Currently Brewing" projects displayed first with a distinct visual treatment (steam icon, animated badge, or warm accent color)
-- Featured/completed projects follow
 - Clicking a card opens a modal or expands inline for full detail
 - Project detail uses plain language for descriptions — the menu metaphor ends at the card title
+
+**Note:** In-progress and upcoming projects live in the dedicated **What's Brewing** tab, not as badges on these cards.
 
 ---
 
@@ -249,12 +250,21 @@ Displayed as a compact "specials board" — not a full section unless the conten
 ### 5.10 Navigation
 
 **Behavior:**
-- Sticky top nav using the themed section names
-- Active section highlighted on scroll (scroll-spy)
+- Sticky top nav with 4 tab buttons: **About**, **The Menu**, **What's Brewing**, **Come Find Me**
+- Active tab highlighted in nav
+- Switching tabs scrolls to top and fades in the new content (Framer Motion AnimatePresence)
 - Hamburger menu on mobile
 - **"Full Résumé"** download always visible in nav (PDF)
-- Smooth scroll on link click
 - Nav can subtly evoke a café menu board — typography and spacing, not a literal illustration
+
+**Tab → Sections mapping:**
+| Tab | Sections rendered |
+|---|---|
+| Home | Hero |
+| About | Meet the Barista, Where I Trained |
+| The Menu | The Menu, House Specialties, The Toolkit |
+| What's Brewing | What's Brewing (future projects) |
+| Come Find Me | Come Find Me |
 
 ---
 
@@ -293,11 +303,11 @@ Warm, sophisticated, not saccharine. Two directions to choose between:
 ### Texture & Atmosphere
 - Subtle paper or linen texture on section backgrounds
 - A chalkboard-style element for the House Specialties and/or Skills section
-- Steam or subtle warmth motifs in loading states or the "Currently Brewing" badge
+- Steam or subtle warmth motifs in the What's Brewing tab header and card treatments
 - No clip art, no literal coffee cup illustrations unless executed with real craft
 
 ### Signature Element
-The **"Currently Brewing"** treatment on active projects — an animated steam badge or a warm glowing border that makes in-progress work feel alive and intentional, not incomplete.
+The **What's Brewing** tab — a dedicated dark-espresso-background view for future and upcoming projects. Confirmed work gets a warm glowing border and caramel accent; in-planning work is visually subdued. Animated steam wisps above the header make the section feel alive and intentional.
 
 ---
 
@@ -311,7 +321,7 @@ The **"Currently Brewing"** treatment on active projects — an animated steam b
 | Styling | CSS Modules or Tailwind CSS |
 | Animations | Framer Motion or CSS transitions |
 | Form handling | EmailJS or Formspree (no backend) |
-| Routing | Single-page (scroll-based, no React Router needed) |
+| Routing | Tab-based via `useState` + AnimatePresence (no React Router needed) |
 | Hosting | GitHub Pages, Vercel, or Netlify |
 
 ### 7.2 Performance
@@ -378,7 +388,9 @@ src/
 
 ## 9. Pages / Routes
 
-Single-page application. All sections live on one scrollable page. No routing required in v1.
+Tab-based single-page application. `activeTab` state in `App.jsx` drives which sections render; no React Router needed. AnimatePresence handles fade transitions between tabs. Tabs: `home`, `about`, `menu`, `brewing`, `contact`.
+
+Behind the Counter (Experience) is not currently rendered in any tab — deferred to a future iteration.
 
 ---
 
@@ -416,4 +428,5 @@ Before development begins, resolve:
 4. **Resume format?** PDF hosted in the repo, or link to an external source (e.g., a Google Doc)?
 5. **House Specialties content?** What are the 3–5 quant/finance items worth calling out explicitly?
 6. **Custom domain?** Own domain or `username.github.io`?
-7. **"Currently Brewing" projects?** What's actively in progress right now?
+7. **What's Brewing content?** Three future projects seeded (Pericles research, multi-factor model, financial knowledge graph). Add, remove, or adjust as plans solidify.
+8. **Behind the Counter (Experience)?** Section built but not currently in any tab. Add to The Menu tab or give it its own tab in a future iteration?
