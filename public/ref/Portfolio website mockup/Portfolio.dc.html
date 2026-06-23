@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&amp;family=DM+Sans:wght@300;400;500;600&amp;family=Caveat:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{ margin:0; background:#F9F5E3; }
+  ::selection{ background:#66101F; color:#F9F5E3; }
+  body::before{
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:9999;
+    opacity:0.045; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:300px 300px;
+  }
+  @keyframes steamRise{ 0%{ transform:translateY(2px); opacity:0; } 30%{ opacity:.85; } 100%{ transform:translateY(-8px); opacity:0; } }
+  @keyframes floaty{ 0%,100%{ transform:translateY(0) rotate(var(--r,0deg)); } 50%{ transform:translateY(-7px) rotate(var(--r,0deg)); } }
+  .steam path{ animation:steamRise 2.6s ease-in-out infinite; }
+  .steam path:nth-child(2){ animation-delay:.5s; }
+  .steam path:nth-child(3){ animation-delay:1s; }
+  @media (prefers-reduced-motion: reduce){ .steam path{ animation:none; } html{ scroll-behavior:auto; } }
+</style>
+</helmet>
+
+<div style="font-family:'DM Sans',system-ui,sans-serif; color:#0B3948; background:#F9F5E3; min-height:100vh;">
+
+  <!-- ===================== RIGHT TAB RAIL ===================== -->
+  <nav style="position:fixed; top:0; right:0; bottom:0; width:264px; z-index:100; display:flex; flex-direction:column; justify-content:space-between; align-items:flex-end; padding:40px 44px; border-left:1px solid rgba(11,57,72,0.12); background:#F9F5E3; text-align:right;">
+    <div onClick="{{ home }}" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+      
+      <span style="font-family: 'Fraunces',serif; font-weight: 600; font-size: 19px; color: #66101F; letter-spacing: -0.01em; width: 143px; height: 100%; align-self: auto">Chelsea Kwan</span><img src="sketches/beanbag.png" alt="" style="height:34px; width:auto; mix-blend-mode:multiply;">
+    </div><div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px; width:100%;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="6">
+        <button onClick="{{ t.select }}" style="display:flex; align-items:center; justify-content:flex-end; gap:14px; width:100%; background:none; border:none; cursor:pointer; padding:9px 0;">
+          <span style="font-family:'Space Mono',monospace; font-size:11px; color:#65472A; opacity:0.6;">{{ t.n }}</span>
+          <span style="font-family:'Fraunces',serif; font-size:18px; font-weight:{{ t.weight }}; color:{{ t.color }}; letter-spacing:-0.01em;">{{ t.label }}</span>
+          <span style="height:2px; width:{{ t.barW }}; background:#66101F; border-radius:2px; transition:width .25s ease;"></span>
+        </button>
+      </sc-for>
+    </div>
+
+    
+
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:16px;">
+      <button onClick="{{ openResume }}" style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:#65472A; background:none; border:1px solid rgba(101,71,42,0.5); border-radius:3px; padding:8px 14px; cursor:pointer;" style-hover="background:#65472A; color:#F9F5E3; border-color:#65472A;">Full Résumé ↓</button>
+      <div style="display:flex; gap:16px; opacity:0.55;">
+        
+        
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== CONTENT ===================== -->
+  <main style="margin-right:264px;">
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 64px; position: relative">
+
+      <!-- ---------- HOME ---------- -->
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <section class="view" data-screen-label="Home" style="min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:90px 0;">
+          <div style="position:relative;">
+            
+
+            <img src="sketches/title.png" alt="" style="position:absolute; top:-66px; left:-2px; width:212px; transform:rotate(-2deg); opacity:0.55; mix-blend-mode:multiply; pointer-events:none;">
+            <svg style="position: absolute; bottom: -38px; left: -6px" width="118" height="34" viewBox="0 0 120 40" fill="none" stroke="#84ACCE" stroke-width="2.6" stroke-linecap="round"><path d="M4 20 q12 -16 24 0 q12 16 24 0 q12 -16 24 0 q12 16 24 0"></path></svg>
+
+            <div style="display:flex; align-items:center; gap:14px; margin-bottom:22px;">
+              <span style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.28em; text-transform:uppercase; color:#65472A;">Boston, MA — Open Daily</span>
+              <span style="flex:0 0 40px; height:1px; background:rgba(11,57,72,0.3);"></span>
+            </div>
+            <h1 style="font-family: 'Fraunces',serif; font-weight: 600; font-size: 74px; line-height: 0.98; letter-spacing: -0.025em; margin: 0 0 8px; color: #66101F; position: relative">Hello, I'm<br>Chelsea Kwan.<img src="sketches/machine.png" alt="espresso machine sketch" style="position: absolute; top: -71px; width: 196px; --r: 5deg; animation: floaty 7s ease-in-out infinite; mix-blend-mode: multiply; left: 568px"></h1>
+            <p style="font-family:'Caveat',cursive; font-size:30px; color:#66101F; margin:6px 0 22px; transform:rotate(-1.5deg);">math &amp; business student · fintech-bound</p>
+            <p style="font-size:17px; line-height:1.75; color:#3a5560; max-width:540px; margin:0 0 34px;">I work at the intersection of markets, data, and code — from strategic finance and procurement analytics to systematic research and knowledge-graph pipelines. Pull up a stool; the menu's just a tab away.</p>
+            <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
+              <button onClick="{{ goMenu }}" style="font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; color:#F9F5E3; background:#0B3948; border:none; border-radius:3px; padding:14px 24px; cursor:pointer;" style-hover="background:#082731;">See the Menu →</button>
+              
+            </div>
+          </div>
+
+          <div style="margin-top:80px; padding-top:40px; border-top:1px solid rgba(11,57,72,0.14);">
+            <p style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#65472A; margin:0 0 26px;">House Specialties</p>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:24px;">
+              <sc-for list="{{ specialties }}" as="sp" hint-placeholder-count="4">
+                <div onClick="{{ sp.go }}" style="cursor:pointer; padding-top:18px; border-top:2px solid #66101F;">
+                  <img src="{{ sp.iconSrc }}" alt="" style="height:60px; width:auto; display:block; margin-bottom:12px; mix-blend-mode:multiply;">
+                  <h3 style="font-family:'Fraunces',serif; font-weight:600; font-size:18px; color:#66101F; margin:0 0 6px;">{{ sp.label }}</h3>
+                  <p style="font-size:13.5px; line-height:1.55; color:#3a5560; margin:0;">{{ sp.desc }}</p>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <!-- ---------- THE MENU (printed board) ---------- -->
+      <sc-if value="{{ isMenu }}" hint-placeholder-val="{{ false }}">
+        <section class="view" data-screen-label="The Menu" style="padding:96px 0 90px; position:relative;">
+<img src="sketches/teapot.png" alt="" style="position:absolute; top:70px; left:-12px; width:158px; transform:rotate(-3deg); mix-blend-mode:multiply;">
+          <img src="sketches/donut.png" alt="" style="position:absolute; top:96px; right:-14px; width:118px; transform:rotate(4deg); mix-blend-mode:multiply;">
+          <div style="text-align:center; margin-bottom:50px;">
+            
+            <h2 style="font-family:'Caveat',cursive; font-weight:700; font-size:62px; line-height:1; margin:0; color:#66101F; transform:rotate(-1deg);">The Menu</h2>
+            <p style="font-family:'Fraunces',serif; font-style:italic; font-size:18px; color:#3f5963; margin:10px 0 0;">Roasted slow, served daily — tap any line for the full pour.</p>
+          </div>
+
+          <!-- category: experience -->
+          <div style="margin-bottom:40px;">
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin:0 4px 8px;">
+              <span style="font-family:'Space Mono',monospace; font-weight:700; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; color:#66101F;">Behind the Counter</span>
+              
+            </div>
+            <div style="height:1px; background:rgba(11,57,72,0.3); margin:0 4px 12px;"></div>
+            <sc-for list="{{ experiences }}" as="x" hint-placeholder-count="4">
+              <div onClick="{{ x.open }}" style="display:grid; grid-template-columns:minmax(150px,0.85fr) minmax(0,1.45fr) 104px; column-gap:20px; align-items:baseline; padding:7px 6px; cursor:pointer; border-radius:3px;" style-hover="background:rgba(132,172,206,0.16);">
+                <span style="font-family:'Space Mono',monospace; font-size:15px; color:#0B3948;">{{ x.name }}</span>
+                <span style="font-family:'Space Mono',monospace; font-size:14px; color:#65472A;">{{ x.desc }}</span>
+                <span style="font-family:'Space Mono',monospace; font-size:14px; color:#66101F; text-align:right; white-space:nowrap;">{{ x.when }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- category: projects -->
+          <div style="margin-bottom:34px;">
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin:0 4px 8px;">
+              <span style="font-family:'Space Mono',monospace; font-weight:700; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; color:#66101F;">House Projects</span>
+              
+            </div>
+            <div style="height:1px; background:rgba(11,57,72,0.3); margin:0 4px 12px;"></div>
+            <sc-for list="{{ projectMenu }}" as="p" hint-placeholder-count="2">
+              <div onClick="{{ p.open }}" style="display:grid; grid-template-columns:minmax(150px,0.85fr) minmax(0,1.45fr) 104px; column-gap:20px; align-items:baseline; padding:7px 6px; cursor:pointer; border-radius:3px;" style-hover="background:rgba(132,172,206,0.16);">
+                <div style="display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;">
+                  <span style="font-family:'Space Mono',monospace; font-size:15px; color:#0B3948;">{{ p.name }}</span>
+                </div>
+                <span style="font-family:'Space Mono',monospace; font-size:14px; color:#65472A;">{{ p.desc }}</span>
+                <span style="font-family:'Space Mono',monospace; font-size:14px; color:#66101F; text-align:right; white-space:nowrap;">{{ p.when }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- centred note + flourish -->
+          
+          <div style="display:flex; align-items:center; justify-content:center; gap:16px; margin:0 0 44px;">
+            
+            
+            
+          </div>
+
+          <!-- category: extras -->
+          <div>
+            
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin:0 4px 8px;">
+              <span style="font-family:'Space Mono',monospace; font-weight:700; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; color:#66101F;">On the Side</span>
+              
+            </div><div style="height:1px; background:rgba(11,57,72,0.3); margin:0 4px 12px;"></div>
+            <sc-for list="{{ sideItems }}" as="s" hint-placeholder-count="3">
+              <div style="display:grid; grid-template-columns:minmax(150px,0.85fr) minmax(0,1.45fr) 104px; column-gap:20px; align-items:baseline; padding:7px 6px;">
+                <span style="font-family:'Space Mono',monospace; font-size:15px; color:#0B3948;">{{ s.name }}</span>
+                <div style="box-sizing: border-box; display: flex; flex-direction: column; gap: 12px"><span style="font-family: 'Space Mono',monospace; font-size: 14px; color: #65472A; width: 487px; height: 40px">{{ s.desc }}</span></div>
+                
+              </div>
+            </sc-for>
+          </div>
+
+          
+        </section>
+      </sc-if>
+
+      <!-- ---------- WHAT'S BREWING ---------- -->
+      <sc-if value="{{ isBrewing }}" hint-placeholder-val="{{ false }}">
+        <section class="view" data-screen-label="What's Brewing" style="padding:104px 0 90px; position:relative;">
+          <img src="sketches/teapot.png" alt="" style="position:absolute; top:60px; right:-18px; width:132px; transform:rotate(4deg); mix-blend-mode:multiply; pointer-events:none;">
+          <div style="margin-bottom:46px; max-width:620px;">
+            <p style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#65472A; margin:0 0 14px;">04 — On the Horizon</p>
+            <h2 style="font-family:'Fraunces',serif; font-weight:600; font-size:56px; line-height:1; letter-spacing:-0.025em; margin:0 0 14px; color:#66101F;">What's Brewing</h2>
+            <p style="font-family:'Fraunces',serif; font-style:italic; font-size:19px; line-height:1.5; color:#3f5963; margin:0;">Projects confirmed, in planning, and simmering on the back burner.</p>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(258px,1fr)); gap:24px; align-items:stretch;">
+            <sc-for list="{{ brewing }}" as="b" hint-placeholder-count="3">
+              <div style="display:flex; flex-direction:column; gap:14px; height:100%; border:1px solid {{ b.borderColor }}; border-radius:5px; padding:26px 24px;">
+                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                  <span style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.04em; color:#65472A; border:1px solid rgba(101,71,42,0.4); border-radius:3px; padding:6px 12px;">{{ b.status }}</span>
+                  <sc-if value="{{ b.confirmed }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-family:'Space Mono',monospace; font-size:13px; color:#66101F;">confirmed ✓</span>
+                  </sc-if>
+                </div>
+                <div>
+                  <h3 style="font-family:'Fraunces',serif; font-weight:600; font-size:24px; line-height:1.12; letter-spacing:-0.01em; margin:0; color:#66101F;">{{ b.title }}</h3>
+                  <sc-if value="{{ b.org }}" hint-placeholder-val="{{ false }}">
+                    <p style="font-family:'Space Mono',monospace; font-size:13px; color:#84ACCE; margin:8px 0 0;">{{ b.org }}</p>
+                  </sc-if>
+                </div>
+                <p style="font-size:14.5px; line-height:1.7; color:#3f5963; margin:0;">{{ b.desc }}</p>
+                <div style="display:flex; flex-wrap:wrap; gap:7px; margin-top:auto; padding-top:6px;">
+                  <sc-for list="{{ b.tags }}" as="t" hint-placeholder-count="4">
+                    <span style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; border:1px solid rgba(11,57,72,0.28); color:#0B3948; padding:5px 11px; border-radius:3px;">{{ t }}</span>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <!-- ---------- CONTACT ---------- -->
+      <sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+        <section class="view" data-screen-label="Contact" style="min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:90px 0; position:relative;">
+          <img src="sketches/cup2.png" alt="" style="position: absolute; top: 91px; right: 127px; width: 180px; transform: rotate(3deg); --r: 3deg; animation: floaty 8s ease-in-out infinite; mix-blend-mode: multiply; pointer-events: none">
+          <p style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#65472A; margin:0 0 6px;">05 — Contact</p>
+          <h2 style="font-family:'Caveat',cursive; font-weight:700; font-size:58px; line-height:1; margin:0 0 8px; color:#66101F; transform:rotate(-1deg);">Pull up a chair.</h2>
+          <p style="font-size:16px; line-height:1.7; color:#3f5963; margin:0 0 36px; max-width:480px;">Got a role, a project, or just want to talk shop about markets, F1, or a good espresso? The counter's open.</p>
+          <div style="max-width:560px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+              <input placeholder="Your name" value="{{ formName }}" onInput="{{ setName }}" style="font-family:'DM Sans',sans-serif; font-size:15px; color:#0B3948; background:transparent; border:1px solid rgba(11,57,72,0.28); border-radius:4px; padding:13px 15px; outline:none;" style-focus="border-color:#84ACCE;">
+              <input placeholder="Your email" value="{{ formEmail }}" onInput="{{ setEmail }}" style="font-family:'DM Sans',sans-serif; font-size:15px; color:#0B3948; background:transparent; border:1px solid rgba(11,57,72,0.28); border-radius:4px; padding:13px 15px; outline:none;" style-focus="border-color:#84ACCE;">
+            </div>
+            <textarea placeholder="Your message" rows="4" value="{{ formMsg }}" onInput="{{ setMsg }}" style="width:100%; font-family:'DM Sans',sans-serif; font-size:15px; color:#0B3948; background:transparent; border:1px solid rgba(11,57,72,0.28); border-radius:4px; padding:13px 15px; outline:none; resize:vertical; margin-bottom:16px;" style-focus="border-color:#84ACCE;"></textarea>
+            <button onClick="{{ sendMsg }}" style="font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; color:#F9F5E3; background:#0B3948; border:none; border-radius:4px; padding:14px 28px; cursor:pointer;" style-hover="background:#082731;">Send it over →</button>
+            <div style="display:flex; flex-wrap:wrap; gap:24px; margin-top:36px; padding-top:26px; border-top:1px solid rgba(11,57,72,0.16);">
+              <span onClick="{{ copyEmail }}" style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:#66101F; cursor:pointer; font-weight:500;" style-hover="opacity:0.7;">✉ {{ emailLabel }}</span>
+              <span style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:#65472A;">in / chelseagkwan</span>
+              <span style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:#65472A;">Boston, MA</span>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <!-- ---------- BARISTA (About · Education · Skills) ---------- -->
+      <sc-if value="{{ isBarista }}" hint-placeholder-val="{{ false }}">
+        <section class="view" data-screen-label="Barista" style="padding:104px 0 90px; position:relative;">
+          <img src="sketches/vase.png" alt="" style="position:absolute; top:78px; right:-14px; width:120px; transform:rotate(2deg); mix-blend-mode:multiply; pointer-events:none;">
+          <div style="display:flex; align-items:flex-start; gap:14px; margin-bottom:40px;">
+            
+            <div>
+              <p style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#65472A; margin:0 0 4px;">01 — About</p>
+              <h2 style="font-family:'Fraunces',serif; font-weight:600; font-size:44px; margin:0; letter-spacing:-0.02em; color:#66101F;">Meet the Barista</h2>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:52px; align-items:start;">
+            <div style="font-size:17px; line-height:1.8; color:#3f5963;">
+              <p style="margin:0 0 18px;">I'm a Mathematics &amp; Business Administration student at Northeastern's D'Amore-McKim School of Business, concentrating in fintech with a minor in data science. I got curious about markets the same way I got curious about a good pour-over — by wanting to understand exactly what's happening underneath.</p>
+              <p style="margin:0 0 18px;">Lately that's meant a strategic-finance co-op at Klaviyo (spend strategy, negotiations, and a savings process that captured real dollars), data engineering at Cortex, and leading <em style="font-style:italic; color:#66101F;">Disrupt FinTech Consulting</em>. This fall I'm joining Pericles Capital as a quantitative analyst.</p>
+              <p style="margin:0;">Off the clock you'll find me at the pottery wheel, watching Formula 1, playing guitar, baking, or working through a stack of books with something jazz or classical on.</p>
+            </div>
+            <aside style="border:1px solid rgba(11,57,72,0.16); border-left:3px solid {{ accent }}; border-radius:0 4px 4px 0; padding:24px 26px;">
+              <p style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#65472A; margin:0 0 12px;">What's in my cup right now</p>
+              <p style="font-family:'Fraunces',serif; font-style:italic; font-size:19px; line-height:1.5; color:#66101F; margin:0 0 14px;">"Heading to <span style="border-bottom:1.5px solid #84ACCE;">Pericles Capital</span> to study how data-center buildout moves commodity and equity prices."</p>
+              <p style="font-size:14px; line-height:1.65; color:#3f5963; margin:0;">Wrapping a strategic-finance co-op at Klaviyo and directing consulting projects at Disrupt FinTech.</p>
+            </aside>
+          </div><div style="margin-top: 72px; padding-top: 44px; border-top: 1px solid rgba(11,57,72,0.14); position: relative; border-style: none">
+            <img src="sketches/bag.png" alt="" style="position: absolute; top: -4px; width: 116px; transform: rotate(-3deg); mix-blend-mode: multiply; pointer-events: none; left: 593px">
+            <div style="margin-bottom:30px;">
+              
+              <h2 style="font-family:'Fraunces',serif; font-weight:600; font-size:38px; margin:0; letter-spacing:-0.02em; color:#66101F;">Education</h2>
+            </div>
+            <sc-for list="{{ education }}" as="ed" hint-placeholder-count="1">
+              <div onClick="{{ ed.toggle }}" style="cursor: pointer; padding: 22px 0; border-top: 1px solid rgba(11,57,72,0.18); border-style: none" style-hover="opacity:0.92;">
+                <div style="display:flex; align-items:flex-start; gap:14px;">
+                  
+                  <div style="flex:1;">
+                    <div style="display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap;">
+                      <h3 style="font-family:'Fraunces',serif; font-weight:600; font-size:23px; margin:0; letter-spacing:-0.01em; color:#66101F;">{{ ed.school }}</h3>
+                      <span style="font-family:'Space Mono',monospace; font-size:12px; color:#65472A; white-space:nowrap;">{{ ed.dates }}</span>
+                    </div>
+                    <p style="font-size:15px; color:#3f5963; margin:6px 0 0;">{{ ed.degree }}</p>
+                    <sc-if value="{{ ed.expanded }}" hint-placeholder-val="{{ true }}">
+                      <div style="margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:18px;">
+                        <div>
+                          <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#84ACCE; margin:0 0 6px;">GPA</p>
+                          <p style="font-size:15px; color:#3f5963; margin:0;">{{ ed.gpa }}</p>
+                        </div>
+                        <div>
+                          <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#84ACCE; margin:0 0 6px;">Coursework</p>
+                          <p style="font-size:15px; line-height:1.6; color:#3f5963; margin:0;">{{ ed.coursework }}</p>
+                        </div>
+                        <div>
+                          <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#84ACCE; margin:0 0 6px;">Awards &amp; Activities</p>
+                          <p style="font-size:15px; line-height:1.6; color:#3f5963; margin:0;">{{ ed.honors }}</p>
+                        </div>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- education subsection -->
+
+          <!-- toolkit subsection -->
+          <div style="margin-top: 72px; padding-top: 44px; border-top: 1px solid rgba(11,57,72,0.14); position: relative; border-style: none">
+            
+            <div style="margin-bottom:30px;">
+              
+              
+            <h2 style="font-family: 'Fraunces',serif; font-weight: 600; font-size: 38px; margin: 0; letter-spacing: -0.02em; color: #66101F; width: 657px; height: 47px; position: relative">Skills<img src="sketches/muffin.png" alt="" style="position: absolute; top: -35px; width: 118px; transform: rotate(3deg); mix-blend-mode: multiply; pointer-events: none; left: 105px"></h2></div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:38px;">
+              <sc-for list="{{ skillGroups }}" as="g" hint-placeholder-count="5">
+                <div>
+                  <div style="display:flex; align-items:center; gap:9px; margin-bottom:16px;">
+                    <img src="{{ g.iconSrc }}" alt="" style="height:40px; width:auto; mix-blend-mode:multiply;">
+                    <h3 style="font-family:'Fraunces',serif; font-weight:600; font-size:19px; margin:0; color:#0B3948;">{{ g.title }}</h3>
+                  </div>
+                  <div style="display:flex; flex-wrap:wrap; gap:7px;">
+                    <sc-for list="{{ g.items }}" as="s" hint-placeholder-count="4">
+                      <span style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; border:1px solid rgba(11,57,72,0.28); color:#0B3948; padding:5px 11px; border-radius:3px;">{{ s }}</span>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          
+        </section>
+      </sc-if>
+    </div>
+  </main>
+
+  <!-- ===================== DETAIL MODAL ===================== -->
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position:fixed; inset:0; z-index:1000; background:rgba(11,57,72,0.55); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:24px;">
+      <div onClick="{{ stop }}" style="background:#F9F5E3; border-radius:6px; max-width:580px; width:100%; max-height:86vh; overflow:auto; padding:38px 40px; box-shadow:0 20px 60px rgba(11,57,72,0.4); position:relative;">
+        <button onClick="{{ closeModal }}" style="position:absolute; top:18px; right:20px; background:none; border:none; font-size:24px; line-height:1; color:#65472A; cursor:pointer;">×</button>
+        <p style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#84ACCE; margin:0 0 8px;">{{ m.kicker }}</p>
+        <h3 style="font-family:'Fraunces',serif; font-weight:700; font-size:29px; margin:0 0 6px; letter-spacing:-0.015em; color:#66101F;">{{ m.title }}</h3>
+        <p style="font-family:'Fraunces',serif; font-style:italic; font-size:16px; color:#3f5963; margin:0 0 22px;">{{ m.subtitle }}</p>
+        <ul style="margin:0 0 22px; padding-left:18px;">
+          <sc-for list="{{ m.bullets }}" as="b" hint-placeholder-count="3">
+            <li style="font-size:15px; line-height:1.7; color:#3f5963; margin-bottom:9px;">{{ b }}</li>
+          </sc-for>
+        </ul>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <sc-for list="{{ m.tags }}" as="t" hint-placeholder-count="3">
+            <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; border:1px solid rgba(11,57,72,0.35); color:#0B3948; padding:4px 10px; border-radius:3px;">{{ t }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================== TOAST ===================== -->
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; left:calc(50% - 132px); bottom:32px; transform:translateX(-50%); z-index:1100; background:#0B3948; color:#F9F5E3; border-left:3px solid {{ accent }}; border-radius:5px; padding:15px 22px; font-size:14px; box-shadow:0 12px 40px rgba(11,57,72,0.4);">{{ toastMsg }}</div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#84ACCE&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = {
+    tab: 'home',
+    open: null,          // { type:'exp'|'proj', id }
+    eduExp: { 'ed-1': true },
+    formName: '', formEmail: '', formMsg: '',
+    toast: false, toastMsg: '', copied: false,
+  };
+
+  get accent(){ return this.props.accentColor || '#84ACCE'; }
+  EMAIL = 'kwan.che@northeastern.edu';
+
+  TABS = [
+    { id:'home', label:'Home', n:'01' },
+    { id:'barista', label:'The Barista', n:'02' },
+    { id:'menu', label:'The Menu', n:'03' },
+    { id:'brewing', label:"What's Brewing", n:'04' },
+    { id:'contact', label:'Contact', n:'05' },
+  ];
+
+  BREWING = [
+    { status:'Starting September 2026', confirmed:true, title:'Data Center & Commodities Research', org:'Pericles Capital',
+      desc:'Backtesting the statistical relationship between data center buildout and its downstream impact on commodity and equity markets. Full quant workflow: data sourcing, factor construction, signal testing, and backtesting infrastructure.',
+      tags:['Python','Quantitative Research','Backtesting','Statistics','Equities'] },
+    { status:'In Planning', confirmed:false, title:'Multi-Factor Portfolio Optimizer', org:'',
+      desc:'Extending the Markowitz & SIM work into a multi-factor model that incorporates macroeconomic indicators alongside traditional risk factors. Goal: a Python-based backtesting framework with interactive performance visualization.',
+      tags:['Python','NumPy','Portfolio Theory','Factor Models','Matplotlib'] },
+    { status:'In Planning', confirmed:false, title:'Financial Knowledge Graph', org:'',
+      desc:'Building on the Cortex data engineering work — an AI-accessible knowledge graph for financial document analysis, connecting companies, SEC filings, and market events using Neo4j and LLM embeddings for natural language querying.',
+      tags:['Python','Neo4j','AI','Data Engineering','PostgreSQL'] },
+  ];
+
+  EXPERIENCE = [
+    { id:'e1', company:'Pericles Capital', role:'Incoming Quantitative Analyst', location:'Boston, MA',
+      dates:'September 2026', when:"Sep '26", finance:true,
+      bullets:['Joining a systematic research team to study how data-center buildout affects commodity and equity prices.'],
+      tags:['Systematic Research','Commodities','Equities'] },
+    { id:'e2', company:'Klaviyo', role:'Strategic Finance Analyst Co-op', location:'Boston, MA',
+      dates:'January 2026 – Present', when:"Jan '26 –", finance:true,
+      bullets:[
+        'Led negotiations across marketing, GTM, R&D, and G&A on $300K+ deals for key company stakeholders.',
+        'Partnered with FP&A, BI, and Security & Risk to improve and streamline vendor onboarding by 40%.',
+        'Transformed $20M in R&D and IT spend data into a comprehensive category strategy alongside Senior VPs.',
+        'Analyzed $5B+ in contracts via SQL to prioritize sourcing and drive spend efficiency across all cost centers.',
+        'Built a savings process that captured $374K in savings and $5.4M in cost avoidance; shipped 6+ procurement automations.'],
+      tags:['SQL','FP&A','Excel','Procurement','Category Strategy'] },
+    { id:'e3', company:'Disrupt FinTech Consulting', role:'Director of Consulting & Strategy Lead', location:'Boston, MA',
+      dates:'May 2025 – Present', when:"May '25 –", finance:false,
+      bullets:[
+        'Directed and mentored 24+ consultants and developers across 5 strategic and technical client projects.',
+        'Drove client acquisition via fintech market research, reaching out to 100+ startup founders.',
+        'Converted leads into partnerships through strategic outreach, directing stakeholder meetings and scoping projects.',
+        'Presented project outcomes to an audience of 80+ students and stakeholders.',
+        'Led recruitment and growth — expanded the consultant pipeline by 70% and scaled the organization by 300%.'],
+      tags:['Strategy','Leadership','Client Management','Market Research'] },
+    { id:'e4', company:'Cortex', role:'Data Engineer', location:'Boston, MA',
+      dates:'January 2026 – April 2026', when:"Jan–Apr '26", finance:false,
+      bullets:[
+        'Executed an end-to-end data engineering pipeline designed to scale to 100+ documents across file formats.',
+        'Transformed unstructured data into a standardized format for relationship extraction and knowledge-graph construction.',
+        'Designed an AI-accessible graph database leveraging context engineering and Python to improve discoverability.',
+        'Built pipelines parsing PDFs & CSVs into structured JSON stored across Neo4j, S3 & Supabase PostgreSQL.',
+        'Reduced retrieval overhead by 60% by improving model responses with natural-language knowledge-graph search.'],
+      tags:['Python','Neo4j','PostgreSQL','FastAPI','Docker'] },
+  ];
+
+  CAT_LABEL = { 'finance-quant':'Finance & Quant', 'data-ml':'Data & ML' };
+
+  PROJECTS = [
+    { id:'p1', name:'Markowitz & SIM Stock Analysis', desc:'Asset Valuation · Excel, ToolPak', location:'Boston, MA',
+      dates:'December 2025', when:"Dec '25", category:'finance-quant',
+      bullets:[
+        'Computed Sharpe Ratios, CAPM regressions, and betas on daily and monthly frequencies.',
+        'Built and analyzed portfolios using Markowitz Mean-Variance Optimization and the Single Index Model.',
+        'Constructed the efficient frontier, estimated the covariance matrix, and solved for the max-Sharpe tangency portfolio.',
+        'Determined optimal capital allocations for a 5-asset, $1,000 universe balancing risk-adjusted returns.'],
+      tags:['Excel','Portfolio Theory','CAPM','Optimization'] },
+    { id:'p2', name:'Abalone Predictive Modeling', desc:'Machine Learning · Python, Sklearn', location:'Boston, MA',
+      dates:'November 2025', when:"Nov '25", category:'data-ml',
+      bullets:[
+        'Developed a linear regression model and KNN classifier to predict age from measurements on a 4,177-sample dataset.',
+        'Standardized features and encoded the categorical sex variable to support distance-based KNN modeling.',
+        'Visualized model performance via annotated heatmaps, regression scatter plots, and confusion matrices.'],
+      tags:['Python','scikit-learn','Pandas','Matplotlib'] },
+  ];
+
+  SIDE = [
+    { name:'Spoken languages', desc:'English — native · Mandarin — working proficiency', price:'—' },
+    { name:'Off the clock', desc:'Formula 1, pottery, guitar, baking, jazz & classical', price:'—' },
+    { name:'>> will relocate for good coffee', desc:'', price:'– 0.3' },
+  ];
+
+  EDUCATION = [
+    { id:'ed-1', school:'Northeastern University', degree:"BS, Mathematics & Business Administration · Concentration: Fintech · Minor: Data Science — D'Amore-McKim School of Business", dates:'2024 — May 2028',
+      gpa:'3.9 / 4.0',
+      coursework:'Probability & Statistics, Stochastic Processes, Differential Equations, Linear Algebra, Mathematical Modeling, Asset Valuation, Financial Econometrics',
+      honors:"Honors Program, Dean's List, Disrupt Consulting, Generate, Association of Women in Mathematics" },
+  ];
+
+  SKILLS = [
+    { title:'Programming & Query', items:['Python','SQL','Cypher'] },
+    { title:'Frameworks & Libraries', items:['Sklearn','NumPy','Pandas','Seaborn','FastAPI','Matplotlib'] },
+    { title:'Tools', items:['Git','Docker','Tableau','Snowflake','Coefficient','PowerPoint','Excel'] },
+    { title:'Databases', items:['PostgreSQL / pgvector','Neo4j','Kuzu'] },
+  ];
+
+  SPECIALTIES = [
+    { label:'Strategic Finance', desc:'Spend strategy, negotiations, and savings that show up in the P&L.', target:'menu' },
+    { label:'Quant Research', desc:'Portfolio optimization and systematic signals, done honestly.', target:'menu' },
+    { label:'Data Engineering', desc:'Pipelines and knowledge graphs that make data findable.', target:'menu' },
+    { label:'Always Building', desc:'Leading Disrupt, learning markets, shipping side projects.', target:'toolkit' },
+  ];
+
+  ICONS = {
+    cup:'<svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14 h16 v6 a6 6 0 0 1 -6 6 h-4 a6 6 0 0 1 -6 -6 z"/><path d="M22 15 h3 a3 3 0 0 1 0 6 h-3"/><path d="M11 9 q1.5 -2 0 -4"/><path d="M16 9 q1.5 -2 0 -4"/></svg>',
+    machine:'<svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7 h16 v8 h-16 z"/><path d="M9 15 v3 h8 v-3"/><path d="M11 18 h4 v4 h-4 z"/><path d="M21 9 h6 v14"/><path d="M24 23 h-6"/></svg>',
+    beans:'<svg width="28" height="22" viewBox="0 0 36 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="9" ry="6" transform="rotate(-20 12 12)"/><path d="M6 8 q6 5 12 8"/><ellipse cx="25" cy="14" rx="8" ry="5" transform="rotate(-20 25 14)"/></svg>',
+    kettle:'<svg width="28" height="26" viewBox="0 0 32 30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 14 h14 v8 a4 4 0 0 1 -4 4 h-6 a4 4 0 0 1 -4 -4 z"/><path d="M21 16 q6 -1 7 -9"/><path d="M11 14 v-3 h6 v3"/></svg>',
+    plant:'<svg width="24" height="28" viewBox="0 0 30 34" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 32 v-12"/><path d="M15 21 q-8 0 -9 -9 q8 0 9 9"/><path d="M15 19 q8 -1 9 -10 q-8 1 -9 10"/></svg>',
+    moka:'<svg width="26" height="28" viewBox="0 0 30 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16 l-2 12 h14 l-2 -12 z"/><path d="M8 16 h10 l2 -6 h-14 z"/><path d="M18 12 h6 v5"/></svg>',
+  };
+
+  go(tab){ this.setState({ tab }); window.scrollTo({ top:0, behavior:'auto' }); }
+  showToast(msg){ this.setState({ toast:true, toastMsg:msg }); clearTimeout(this._tt); this._tt = setTimeout(()=>this.setState({ toast:false }), 3200); }
+
+  renderVals(){
+    const accent = this.accent;
+    const COLORS = ['#66101F','#65472A','#84ACCE','#0B3948'];
+
+    const tabs = this.TABS.map(t => {
+      const on = this.state.tab===t.id;
+      return { label:t.label, n:t.n, select:()=>this.go(t.id),
+        color: on?'#66101F':'#65472A', weight: on?600:400, barW: on?'22px':'0px' };
+    });
+
+    const experiences = this.EXPERIENCE.map(j => ({
+      name:j.company, desc:j.role, when:j.when, finance:j.finance,
+      open:()=>this.setState({ open:{ type:'exp', id:j.id } }) }));
+
+    const projectMenu = this.PROJECTS.map(p => ({
+      name:p.name, desc:p.desc, when:p.when,
+      open:()=>this.setState({ open:{ type:'proj', id:p.id } }) }));
+
+    const sideItems = this.SIDE;
+
+    // unified modal
+    const op = this.state.open;
+    let m = {};
+    if (op && op.type==='exp'){
+      const j = this.EXPERIENCE.find(x=>x.id===op.id);
+      if (j) m = { kicker:'Experience · '+j.location, title:j.company, subtitle:j.role+' · '+j.dates, bullets:j.bullets, tags:j.tags };
+    } else if (op && op.type==='proj'){
+      const p = this.PROJECTS.find(x=>x.id===op.id);
+      if (p) m = { kicker:this.CAT_LABEL[p.category]+' · '+p.when, title:p.name, subtitle:p.desc+' · '+p.dates, bullets:p.bullets, tags:p.tags };
+    }
+
+    const education = this.EDUCATION.map(e => ({ ...e, expanded: !!this.state.eduExp[e.id],
+      toggle:()=>this.setState(s=>({ eduExp:{...s.eduExp, [e.id]:!s.eduExp[e.id]} })) }));
+
+    const specNames = ['machine','teapot','beanbag','muffin'];
+    const specialties = this.SPECIALTIES.map((s,i)=>({ ...s, iconSrc:'sketches/'+specNames[i]+'.png', line:COLORS[i%4], go:()=>this.go(s.target) }));
+
+    const grpNames = ['machine','beanbag','cup2','vase','donut'];
+    const skillGroups = this.SKILLS.map((g,i)=>({ ...g, iconSrc:'sketches/'+grpNames[i]+'.png', color:COLORS[i%4] }));
+
+    const brewing = this.BREWING.map(b => ({ ...b,
+      borderColor: b.confirmed ? 'rgba(102,16,31,0.45)' : 'rgba(11,57,72,0.18)' }));
+
+    return {
+      accent, tabs,
+      isHome:this.state.tab==='home', isBarista:this.state.tab==='barista', isMenu:this.state.tab==='menu',
+      isContact:this.state.tab==='contact', isBrewing:this.state.tab==='brewing',
+      home:()=>this.go('home'), goMenu:()=>this.go('menu'),
+      experiences, projectMenu, sideItems, specialties, skillGroups, education, brewing,
+      modalOpen: !!op, m,
+      closeModal:()=>this.setState({open:null}), stop:(e)=>e.stopPropagation(),
+      openResume:()=>this.showToast('Résumé download is a placeholder in this mockup.'),
+      formName:this.state.formName, formEmail:this.state.formEmail, formMsg:this.state.formMsg,
+      setName:(e)=>this.setState({formName:e.target.value}),
+      setEmail:(e)=>this.setState({formEmail:e.target.value}),
+      setMsg:(e)=>this.setState({formMsg:e.target.value}),
+      sendMsg:()=>{ this.showToast("Your message is brewing. I'll be in touch soon ☕"); this.setState({formName:'',formEmail:'',formMsg:''}); },
+      emailLabel: this.state.copied ? 'copied!' : this.EMAIL,
+      copyEmail:()=>{ try{ navigator.clipboard && navigator.clipboard.writeText(this.EMAIL); }catch(e){} this.setState({copied:true}); setTimeout(()=>this.setState({copied:false}),1500); },
+      toast:this.state.toast, toastMsg:this.state.toastMsg,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -19,7 +19,7 @@ export default function BehindTheCounter() {
   const toggle = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }))
 
   return (
-    <section id="the-menu" className="bg-parchment bg-paper-texture section-padding">
+    <section id="the-menu" className="section-padding">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 24 }}

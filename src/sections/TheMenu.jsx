@@ -1,261 +1,203 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, MapPin, X, ExternalLink } from 'lucide-react'
 import { experience } from '../data/experience'
 import { projects } from '../data/projects'
-import Tag from '../components/Tag'
-import BrewingBadge from '../components/BrewingBadge'
 
-const typeAccent = {
-  quant:       'border-l-4 border-caramel',
-  finance:     'border-l-4 border-caramel',
-  consulting:  'border-l-4 border-latte/60',
-  engineering: 'border-l-4 border-latte/30',
+const sk = name => `/ref/Portfolio website mockup/sketches/${name}`
+
+const MONTHS = { January:'Jan', February:'Feb', March:'Mar', April:'Apr', May:'May',
+                 June:'Jun', July:'Jul', August:'Aug', September:'Sep',
+                 October:'Oct', November:'Nov', December:'Dec' }
+
+const shortDuration = str =>
+  str
+    .replace(/(\w+) (\d{4})/g, (_, m, y) => `${MONTHS[m] || m} '${y.slice(2)}`)
+    .replace('Present', '—')
+
+const shortDate = str =>
+  str.replace(/(\w+) (\d{4})/, (_, m, y) => `${MONTHS[m] || m} '${y.slice(2)}`)
+
+const SIDE = [
+  { name: 'Spoken languages', desc: 'English — native · Mandarin — working proficiency' },
+  { name: 'Off the clock',    desc: 'Formula 1, pottery, guitar, baking, jazz & classical' },
+  { name: '>> will relocate for good coffee', desc: '' },
+]
+
+function RowHover({ children, onClick }) {
+  const [hover, setHover] = useState(false)
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(140px, 0.85fr) minmax(0, 1.45fr) 100px',
+        columnGap: '20px',
+        alignItems: 'baseline',
+        padding: '7px 6px',
+        cursor: onClick ? 'pointer' : 'default',
+        borderRadius: '3px',
+        background: hover && onClick ? 'rgba(132,172,206,0.16)' : 'transparent',
+        transition: 'background 0.15s',
+      }}
+    >
+      {children}
+    </div>
+  )
 }
 
-const cardVariants = {
-  hidden:  { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+function Modal({ item, onClose }) {
+  if (!item) return null
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(11,57,72,0.55)', backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96, y: 16 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.22 }}
+          onClick={e => e.stopPropagation()}
+          style={{ background: '#F9F5E3', borderRadius: '6px', maxWidth: '580px', width: '100%', maxHeight: '86vh', overflow: 'auto', padding: '38px 40px', boxShadow: '0 20px 60px rgba(11,57,72,0.4)', position: 'relative' }}
+        >
+          <button
+            onClick={onClose}
+            style={{ position: 'absolute', top: '18px', right: '20px', background: 'none', border: 'none', fontSize: '24px', lineHeight: 1, color: '#65472A', cursor: 'pointer' }}
+          >
+            ×
+          </button>
+          <p className="font-mono" style={{ fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: '#84ACCE', margin: '0 0 8px' }}>
+            {item.kicker}
+          </p>
+          <h3 className="font-serif text-maroon" style={{ fontSize: '29px', fontWeight: 700, margin: '0 0 6px', letterSpacing: '-0.015em' }}>
+            {item.title}
+          </h3>
+          <p className="font-serif text-prose italic" style={{ fontSize: '16px', margin: '0 0 22px' }}>
+            {item.subtitle}
+          </p>
+          <ul style={{ margin: '0 0 22px', paddingLeft: '18px' }}>
+            {item.bullets.map((b, i) => (
+              <li key={i} className="font-sans text-prose" style={{ fontSize: '15px', lineHeight: '1.7', marginBottom: '9px' }}>
+                {b}
+              </li>
+            ))}
+          </ul>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            {item.tags.map(t => (
+              <span key={t} className="font-sans text-ink" style={{ fontSize: '12px', fontWeight: 500, border: '1px solid rgba(11,57,72,0.35)', padding: '4px 10px', borderRadius: '3px' }}>
+                {t}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
 }
 
 export default function TheMenu() {
-  const [expanded, setExpanded] = useState({})
-  const [selected, setSelected] = useState(null)
+  const [modal, setModal] = useState(null)
 
-  const toggle = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }))
+  const openExp = (job) => setModal({
+    kicker: `Experience · ${job.location}`,
+    title: job.company,
+    subtitle: `${job.role} · ${job.duration}`,
+    bullets: job.bullets,
+    tags: job.tags,
+  })
+
+  const openProj = (proj) => setModal({
+    kicker: `Project · ${proj.category}`,
+    title: proj.name,
+    subtitle: proj.tagline,
+    bullets: [proj.description],
+    tags: proj.tech,
+  })
 
   return (
-    <>
-      {/* ── Experience ── */}
-      <section id="the-menu" className="bg-parchment bg-paper-texture section-padding">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
-          >
-            <p className="font-hand text-caramel text-lg mb-1">experience</p>
-            <h2 className="font-serif text-4xl md:text-5xl text-espresso leading-tight">
-              The Menu
-            </h2>
-          </motion.div>
+    <section style={{ padding: '96px 0 90px', position: 'relative' }}>
 
-          <div className="relative pl-6 md:pl-10">
-            <div className="absolute left-2 md:left-4 top-0 bottom-0 w-px bg-latte/20" aria-hidden="true" />
+      {/* Doodles */}
+      <img src={sk('teapot.png')} alt="" aria-hidden="true"
+        style={{ position: 'absolute', top: '70px', left: '-12px', width: '158px', transform: 'rotate(-3deg)', mixBlendMode: 'multiply', pointerEvents: 'none' }} />
+      <img src={sk('donut.png')} alt="" aria-hidden="true"
+        style={{ position: 'absolute', top: '96px', right: '-14px', width: '118px', transform: 'rotate(4deg)', mixBlendMode: 'multiply', pointerEvents: 'none' }} />
 
-            <div className="space-y-6">
-              {experience.map((job, i) => (
-                <motion.div
-                  key={job.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: '-60px' }}
-                  transition={{ duration: 0.55, delay: i * 0.08 }}
-                  className="relative"
-                >
-                  <span
-                    className={`absolute -left-6 md:-left-10 top-6 w-3 h-3 rounded-full border-2 ${
-                      job.type === 'quant' || job.type === 'finance'
-                        ? 'border-caramel bg-caramel'
-                        : 'border-latte bg-parchment'
-                    }`}
-                    aria-hidden="true"
-                  />
+      {/* Section header */}
+      <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+        <p className="font-mono text-sienna" style={{ fontSize: '12px', letterSpacing: '0.22em', textTransform: 'uppercase', margin: '0 0 6px' }}>
+          02 — On the Board
+        </p>
+        <h2 className="font-hand text-maroon" style={{ fontSize: '62px', fontWeight: 700, lineHeight: 1, margin: 0, transform: 'rotate(-1deg)', display: 'inline-block' }}>
+          The Menu
+        </h2>
+        <p className="font-serif text-prose italic" style={{ fontSize: '18px', margin: '10px 0 0' }}>
+          Roasted slow, served daily — tap any line for the full pour.
+        </p>
+      </div>
 
-                  <div className={`bg-cream rounded-2xl overflow-hidden ${typeAccent[job.type] ?? ''}`}>
-                    <button
-                      onClick={() => toggle(job.id)}
-                      className="w-full text-left p-6 md:p-7 cursor-pointer group"
-                      aria-expanded={!!expanded[job.id]}
-                      aria-controls={`bullets-${job.id}`}
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
-                        <div className="flex items-start gap-2 flex-wrap">
-                          <h3 className="font-serif text-xl text-espresso">{job.company}</h3>
-                          {job.current && (
-                            <span className="px-2 py-0.5 rounded-full bg-caramel/15 text-caramel text-xs font-sans font-semibold mt-0.5">
-                              current
-                            </span>
-                          )}
-                          {job.upcoming && (
-                            <span className="px-2 py-0.5 rounded-full bg-espresso/10 text-espresso text-xs font-sans font-semibold mt-0.5">
-                              incoming
-                            </span>
-                          )}
-                        </div>
-                        <ChevronDown
-                          size={16}
-                          className={`text-latte shrink-0 mt-1 transition-transform duration-200 group-hover:text-caramel ${
-                            expanded[job.id] ? 'rotate-180' : ''
-                          }`}
-                          aria-hidden="true"
-                        />
-                      </div>
-
-                      <p className="font-sans text-sm font-semibold text-espresso/80 mb-1">{job.role}</p>
-
-                      <div className="flex flex-wrap items-center gap-3 text-xs text-espresso/45 font-sans">
-                        <span>{job.duration}</span>
-                        <span aria-hidden="true">·</span>
-                        <span className="inline-flex items-center gap-1">
-                          <MapPin size={11} aria-hidden="true" />{job.location}
-                        </span>
-                      </div>
-                    </button>
-
-                    {expanded[job.id] && (
-                      <motion.div
-                        id={`bullets-${job.id}`}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{ duration: 0.28 }}
-                        className="px-6 md:px-7 pb-6 border-t border-latte/15"
-                      >
-                        <ul className="mt-4 space-y-2" role="list">
-                          {job.bullets.map((b, j) => (
-                            <li key={j} className="flex gap-3 font-sans text-sm text-espresso/75 leading-relaxed">
-                              <span className="text-caramel mt-1.5 shrink-0" aria-hidden="true">—</span>
-                              {b}
-                            </li>
-                          ))}
-                        </ul>
-                        <div className="flex flex-wrap gap-2 mt-5">
-                          {job.tags.map(t => <Tag key={t} label={t} variant="accent" />)}
-                        </div>
-                      </motion.div>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+      {/* ── Behind the Counter (Experience) ── */}
+      <div style={{ marginBottom: '40px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', margin: '0 4px 8px' }}>
+          <span className="font-mono text-maroon" style={{ fontWeight: 700, fontSize: '13px', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+            Behind the Counter
+          </span>
         </div>
-      </section>
+        <div style={{ height: '1px', background: 'rgba(11,57,72,0.3)', margin: '0 4px 12px' }} />
+        {experience.map(job => (
+          <RowHover key={job.id} onClick={() => openExp(job)}>
+            <span className="font-mono text-ink" style={{ fontSize: '15px' }}>{job.company}</span>
+            <span className="font-mono text-sienna" style={{ fontSize: '14px' }}>{job.role}</span>
+            <span className="font-mono text-maroon" style={{ fontSize: '14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+              {shortDuration(job.duration)}
+            </span>
+          </RowHover>
+        ))}
+      </div>
 
-      {/* ── Projects ── */}
-      <section className="bg-steam section-padding">
-        <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6 }}
-            className="mb-10"
-          >
-            <p className="font-hand text-caramel text-lg mb-1">projects</p>
-            <h2 className="font-serif text-4xl md:text-5xl text-espresso leading-tight mb-2">
-              Side of the Day
-            </h2>
-            <p className="font-sans text-sm text-espresso/55">
-              Here's what's on offer — click any item for the full description.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
-          >
-            {projects.map(project => (
-              <motion.article
-                key={project.id}
-                variants={cardVariants}
-                onClick={() => setSelected(project)}
-                className="bg-parchment rounded-2xl border border-latte/20 p-6 flex flex-col gap-4 cursor-pointer hover:shadow-md hover:border-caramel/30 transition-all group"
-                aria-label={`${project.name} — click for details`}
-              >
-                {project.brewing && <BrewingBadge />}
-
-                <div>
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <h3 className="font-serif text-lg text-espresso leading-snug group-hover:text-caramel transition-colors">
-                      {project.name}
-                    </h3>
-                    <ExternalLink size={14} className="text-latte/50 group-hover:text-caramel shrink-0 mt-1 transition-colors" aria-hidden="true" />
-                  </div>
-                  <p className="font-hand text-sm text-caramel/80">{project.tagline}</p>
-                </div>
-
-                <p className="font-sans text-xs text-espresso/60 leading-relaxed line-clamp-3">
-                  {project.description}
-                </p>
-
-                <div className="bg-cream rounded-xl px-4 py-2.5 border border-latte/15">
-                  <p className="font-sans text-xs text-espresso/50 mb-0.5">outcome</p>
-                  <p className="font-sans text-xs font-medium text-espresso/80">{project.outcome}</p>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5 mt-auto">
-                  {project.tech.map(t => <Tag key={t} label={t} />)}
-                </div>
-
-                <div className="flex items-center justify-between text-xs text-espresso/40 font-sans">
-                  <span>{project.role}</span>
-                  <span>{project.date}</span>
-                </div>
-              </motion.article>
-            ))}
-          </motion.div>
+      {/* ── House Projects ── */}
+      <div style={{ marginBottom: '40px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', margin: '0 4px 8px' }}>
+          <span className="font-mono text-maroon" style={{ fontWeight: 700, fontSize: '13px', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+            House Projects
+          </span>
         </div>
+        <div style={{ height: '1px', background: 'rgba(11,57,72,0.3)', margin: '0 4px 12px' }} />
+        {projects.map(proj => (
+          <RowHover key={proj.id} onClick={() => openProj(proj)}>
+            <span className="font-mono text-ink" style={{ fontSize: '15px' }}>{proj.name}</span>
+            <span className="font-mono text-sienna" style={{ fontSize: '14px' }}>{proj.tech.slice(0, 3).join(', ')}</span>
+            <span className="font-mono text-maroon" style={{ fontSize: '14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+              {shortDate(proj.date)}
+            </span>
+          </RowHover>
+        ))}
+      </div>
 
-        {/* Detail modal */}
-        <AnimatePresence>
-          {selected && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-espresso/60 backdrop-blur-sm"
-              onClick={() => setSelected(null)}
-              role="dialog"
-              aria-modal="true"
-              aria-label={selected.name}
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                transition={{ duration: 0.25 }}
-                onClick={e => e.stopPropagation()}
-                className="bg-parchment rounded-2xl max-w-lg w-full p-8 shadow-2xl border border-latte/20 relative"
-              >
-                <button
-                  onClick={() => setSelected(null)}
-                  className="absolute top-4 right-4 p-2 rounded-full hover:bg-cream text-latte hover:text-espresso transition-colors cursor-pointer"
-                  aria-label="Close"
-                >
-                  <X size={18} />
-                </button>
+      {/* ── On the Side ── */}
+      <div>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', margin: '0 4px 8px' }}>
+          <span className="font-mono text-maroon" style={{ fontWeight: 700, fontSize: '13px', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+            On the Side
+          </span>
+        </div>
+        <div style={{ height: '1px', background: 'rgba(11,57,72,0.3)', margin: '0 4px 12px' }} />
+        {SIDE.map(s => (
+          <RowHover key={s.name}>
+            <span className="font-mono text-ink" style={{ fontSize: '15px' }}>{s.name}</span>
+            <span className="font-mono text-sienna" style={{ fontSize: '14px' }}>{s.desc}</span>
+            <span />
+          </RowHover>
+        ))}
+      </div>
 
-                {selected.brewing && <div className="mb-4"><BrewingBadge /></div>}
-
-                <h3 className="font-serif text-2xl text-espresso mb-1">{selected.name}</h3>
-                <p className="font-hand text-caramel mb-5">{selected.tagline}</p>
-
-                <p className="font-sans text-sm text-espresso/75 leading-relaxed mb-5">{selected.description}</p>
-
-                <div className="bg-cream rounded-xl px-4 py-3 mb-5 border border-latte/15">
-                  <p className="font-sans text-xs text-espresso/45 mb-1">key outcome</p>
-                  <p className="font-sans text-sm font-medium text-espresso/85">{selected.outcome}</p>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {selected.tech.map(t => <Tag key={t} label={t} variant="accent" />)}
-                </div>
-
-                <div className="flex items-center justify-between text-xs text-espresso/40 font-sans">
-                  <span>{selected.role}</span>
-                  <span>{selected.date}</span>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
-    </>
+      <Modal item={modal} onClose={() => setModal(null)} />
+    </section>
   )
 }

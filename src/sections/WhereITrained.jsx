@@ -13,7 +13,7 @@ export default function WhereITrained() {
   const toggle = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }))
 
   return (
-    <section id="where-i-trained" className="bg-steam section-padding">
+    <section id="where-i-trained" className="section-padding">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -36,7 +36,7 @@ export default function WhereITrained() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="bg-parchment rounded-2xl border border-latte/20 overflow-hidden"
+              className="bg-cream/75 rounded-2xl border border-latte/20 overflow-hidden"
             >
               {/* Main info */}
               <div className="p-7 md:p-8">

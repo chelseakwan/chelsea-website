@@ -1,10 +1,21 @@
 # Product Requirements Document
 ## Personal Portfolio Website — The Coffee Shop
 
-**Version:** 1.2  
-**Stack:** React + JavaScript  
-**Status:** In Progress  
+**Version:** 1.3
+**Stack:** React + JavaScript
+**Status:** In Progress
 **Theme:** Coffee shop — warm, personal, memorable. The metaphor lives in the language and texture; the professional signal lives in the content.
+
+---
+
+## Changelog: v1.2 → v1.3
+
+- **House Specialties** renamed and repurposed: now the Skills section (was "The Toolkit"). The quant/finance callout band is removed entirely.
+- **Behind the Counter (Experience)** retired: not deferred — intentionally removed. Work history surfaces through project cards in The Menu.
+- **Daily Specials** removed from scope. Certs, awards, volunteering deferred to v2+.
+- **Visual direction significantly expanded:** recycled paper texture is the foundation of the entire visual system, not a color approximation. See Section 6 for full specification.
+- **Handdrawn coffee doodles** confirmed as decorative elements only — scattered in margins, section transitions, and the hero. No functional or navigational role.
+- **File structure** updated to reflect removed components and data files.
 
 ---
 
@@ -34,6 +45,7 @@ The coffee shop framing is the wrapper, not the distraction. Every section has a
 - Not a full-stack app with auth or a database
 - Not meant to rank on Google for generic terms (SEO is nice-to-have, not a driver)
 - The theme does not override legibility — if a metaphor makes content harder to find, drop the metaphor
+- No experience/timeline section in the current build — this was an intentional decision, not a deferral
 
 ---
 
@@ -41,20 +53,22 @@ The coffee shop framing is the wrapper, not the distraction. Every section has a
 
 The coffee shop metaphor applies to **section names, nav labels, microcopy, and visual texture**. It does not apply to job titles, company names, project descriptions, or any content a recruiter needs to read accurately.
 
-| Standard Label | Coffee Shop Label | Tab | Notes |
-|---|---|---|---|
-| Hero / Landing | *(no label needed — just the vibe)* | Home | Warm, inviting, sets the tone |
-| About Me | **Meet the Barista** | About | First person, conversational |
-| Education | **Where I Trained** | About | Degree, GPA, coursework — all standard |
-| Projects | **The Menu** | The Menu | Cards as menu items |
-| House Specialties | **House Specialties** | The Menu | Quant/finance callout |
-| Skills | **The Toolkit** | The Menu | Grouped by category, no skill bars |
-| Experience | **Behind the Counter** | *(not in current build)* | Timeline intact; content unchanged |
-| Future Projects | **What's Brewing** | What's Brewing | Confirmed + in-planning upcoming work |
-| Contact | **Come Find Me** | Come Find Me | Form + links, nothing weird |
-| Nav resume link | **Order the Full Menu** or **Full Résumé** | *(all tabs)* | Always one click away |
-| Extras | **Daily Specials** | *(future)* | Certs, awards, volunteering |
-| Footer | *(quiet, standard)* | — | No need to force the metaphor here |
+| Standard Label | Coffee Shop Label | Tab |
+|---|---|---|
+| Hero / Landing | *(no label — just the vibe)* | Home |
+| About Me | Meet the Barista | About |
+| Education | Where I Trained | About |
+| Projects | The Menu | The Menu |
+| Skills | House Specialties | The Menu |
+| Future Projects | What's Brewing | What's Brewing |
+| Contact | Come Find Me | Come Find Me |
+| Nav resume link | Full Résumé | *(all tabs)* |
+
+**Retired labels (out of scope):**
+- ~~The Toolkit~~ → replaced by House Specialties
+- ~~Behind the Counter~~ → retired entirely
+- ~~Daily Specials~~ → deferred to v2+
+- ~~House Specialties (quant callout band)~~ → removed
 
 **Copy principles:**
 - Section intros can lean into the theme lightly ("Here's what's on offer" for projects)
@@ -76,11 +90,12 @@ The coffee shop metaphor applies to **section names, nav labels, microcopy, and 
 - Very short tagline or welcome line (1–2 sentences max)
 - Primary CTA: **See the Menu** (links to Projects)
 - Secondary CTA: **Full Résumé** (PDF download)
-- Optional: profile photo or illustrated avatar with a warm café aesthetic
+- No profile photo
 
 **Behavior:**
 - Full viewport height (100vh) on load
-- Warm background — think parchment, linen, or a deep espresso tone depending on palette choice
+- Recycled paper texture as background (see Section 6)
+- Handdrawn coffee doodles scattered decoratively — loose, margin-dwelling, never centered or symmetrical. Think sketches that drifted onto the page, not a composed illustration
 - Subtle entrance animation: name fades or slides in, tagline follows
 - Smooth scroll on CTA click
 
@@ -98,30 +113,13 @@ The coffee shop metaphor applies to **section names, nav labels, microcopy, and 
 - Personal interests, non-work identity, what makes you you
 - Optional: "What's in my cup right now" — a current focus, book, or project
 
-**Design note:** Conversational tone, first person. Not a third-person bio. The section should feel like meeting someone, not reading a LinkedIn summary.
+**Design note:** Conversational tone, first person. Not a third-person bio. The section should feel like meeting someone, not reading a LinkedIn summary. A small doodle or two can punctuate the section — a coffee cup near the edge, a sprig of something.
 
 ---
 
-### 5.3 House Specialties *(new section)*
+### 5.3 Where I Trained
 
-**Purpose:** Surface quant and finance credentials prominently for the recruiters most likely to click through from LinkedIn. This is the one section that exists specifically to serve that audience without making everyone else wade through it.
-
-**Content:**
-- A small, tight callout — not a full section, more of a highlighted band or card cluster
-- 3–5 "specialties" presented as short, punchy items:
-  - Quantitative skills (statistics, modeling, relevant coursework)
-  - Finance-specific experience or projects
-  - Relevant tools (Python, Excel, Bloomberg, etc.)
-  - Any certifications or coursework worth flagging (CFA prep, financial modeling, etc.)
-- Each item links to the relevant section deeper in the page
-
-**Design note:** This can be styled as a chalkboard-style "Today's Specials" board — visually distinct, easy to spot, quick to scan. It doubles as internal navigation for the audience that cares most.
-
----
-
-### 5.4 Where I Trained
-
-**Theme label for: Education / Academics**
+**Theme label for: Education**
 
 **Purpose:** Show educational background clearly and credibly.
 
@@ -140,35 +138,13 @@ The coffee shop metaphor applies to **section names, nav labels, microcopy, and 
 
 ---
 
-### 5.5 Behind the Counter
-
-**Theme label for: Experience**
-
-**Purpose:** Demonstrate applied skills and professional growth.
-
-**Content per entry:**
-- Company/organization name
-- Role/title *(use real titles — no metaphor here)*
-- Duration (start – end month/year)
-- Location or remote status
-- 2–5 bullet points: what you did, what you built, what the impact was — quantified where possible
-- Tags: relevant skills or tools
-
-**Behavior:**
-- Vertical timeline layout, most recent first
-- Includes internships, research positions, part-time, freelance
-- Collapsed default shows role + company + dates; expand for full bullets
-- Finance and quant roles should be visually distinguishable (e.g., a subtle tag or accent) so recruiters can find them at a glance
-
----
-
-### 5.6 The Menu
+### 5.4 The Menu
 
 **Theme label for: Projects**
 
-**Tab: The Menu** (alongside House Specialties and The Toolkit)
+**Tab: The Menu** (alongside House Specialties)
 
-**Purpose:** The centerpiece of the site. Show what you've actually built, with real outcomes.
+**Purpose:** The centerpiece of the site. Show what you've actually built, with real outcomes. This section carries the full weight of professional history — there is no separate experience section.
 
 **Content per project:**
 - Project name (can be evocative — this is the "menu item name")
@@ -181,20 +157,22 @@ The coffee shop metaphor applies to **section names, nav labels, microcopy, and 
 
 **Behavior:**
 - Card grid layout (2–3 columns on desktop, 1 on mobile)
-- Cards styled as menu items — warm paper texture, clean typography
+- Cards styled as menu items — paper texture bleeds through, clean typography
 - Filter by category: All / Finance & Quant / Web & Apps / Data & ML / Other
 - Clicking a card opens a modal or expands inline for full detail
-- Project detail uses plain language for descriptions — the menu metaphor ends at the card title
+- Project detail uses plain language — the menu metaphor ends at the card title
 
-**Note:** In-progress and upcoming projects live in the dedicated **What's Brewing** tab, not as badges on these cards.
+**Note:** In-progress and upcoming projects live in **What's Brewing**, not as badges here.
 
 ---
 
-### 5.7 The Toolkit
+### 5.5 House Specialties
 
 **Theme label for: Skills**
 
-**Purpose:** Quick scannable reference for technical capabilities.
+**Tab: The Menu** (below The Menu section)
+
+**Purpose:** Quick, scannable reference for technical capabilities. Replaces what was previously called "The Toolkit." The name "House Specialties" now simply evokes the café menu — no quant/finance targeting intended.
 
 **Content:**
 - Grouped by category:
@@ -203,31 +181,31 @@ The coffee shop metaphor applies to **section names, nav labels, microcopy, and 
   - Frameworks & Libraries
   - Developer Tools
   - Concepts & Methods (statistics, DCF, portfolio theory, etc.)
-- Honest proficiency framing: "proficient" vs. "familiar" — no percentage bars
+- Honest proficiency framing: "proficient" vs. "familiar" — no percentage bars, no star ratings
 
-**Design note:** A chalkboard or kraft-paper aesthetic works well here. Skills displayed as tags or a clean grouped list.
-
----
-
-### 5.8 Daily Specials *(optional)*
-
-**Theme label for: Extras / Other**
-
-**Purpose:** Catch-all for credentials that don't fit neatly elsewhere.
-
-| Item | What it includes |
-|---|---|
-| Certifications | Cert name, issuer, date, credential link |
-| Publications / Research | Title, venue, date, link |
-| Awards & Honors | Award name, org, year, brief description |
-| Volunteering | Org, role, dates, impact |
-| Speaking / Events | Talk title, event, date, recording/slides |
-
-Displayed as a compact "specials board" — not a full section unless the content warrants it.
+**Design note:** Chalkboard or kraft-paper panel aesthetic suits this section well. Skills displayed as tags or a clean grouped list. A few small doodles in the margins — a coffee bean, a measuring tool, something that doesn't demand attention — keep the texture alive without decorating the data itself.
 
 ---
 
-### 5.9 Come Find Me
+### 5.6 What's Brewing
+
+**Theme label for: Future Projects**
+
+**Tab: What's Brewing**
+
+**Purpose:** Dedicated space for upcoming and planned work. Signals intellectual momentum and forward motion. Nothing currently in progress — this tab covers what's planned next.
+
+**Content per item:**
+- Project name
+- Brief description of what it will be / the problem it'll address
+- Status: Confirmed / In Planning
+- Anticipated stack or domain (if known)
+
+**Design note:** This tab intentionally breaks from the light paper aesthetic. Background shifts to a deep espresso tone — the one deliberate dark-roast moment in an otherwise light-roast site. Warm glowing borders on confirmed items; subdued treatment for in-planning. Animated steam wisps above the section header. The contrast makes the tab feel like a glimpse into the back of house — something's being prepared.
+
+---
+
+### 5.7 Come Find Me
 
 **Theme label for: Contact**
 
@@ -247,73 +225,111 @@ Displayed as a compact "specials board" — not a full section unless the conten
 
 ---
 
-### 5.10 Navigation
+### 5.8 Navigation
 
 **Behavior:**
-- Sticky top nav with 4 tab buttons: **About**, **The Menu**, **What's Brewing**, **Come Find Me**
-- Active tab highlighted in nav
-- Switching tabs scrolls to top and fades in the new content (Framer Motion AnimatePresence)
+- Sticky top nav with tab buttons: **About**, **The Menu**, **What's Brewing**, **Come Find Me**
+- Active tab highlighted
+- Switching tabs scrolls to top and fades in new content (Framer Motion AnimatePresence)
 - Hamburger menu on mobile
-- **"Full Résumé"** download always visible in nav (PDF)
-- Nav can subtly evoke a café menu board — typography and spacing, not a literal illustration
+- **Full Résumé** PDF download always visible in nav
+- Nav evokes a café menu board through typography and spacing — not a literal illustration
 
 **Tab → Sections mapping:**
+
 | Tab | Sections rendered |
 |---|---|
 | Home | Hero |
 | About | Meet the Barista, Where I Trained |
-| The Menu | The Menu, House Specialties, The Toolkit |
-| What's Brewing | What's Brewing (future projects) |
+| The Menu | The Menu, House Specialties |
+| What's Brewing | What's Brewing |
 | Come Find Me | Come Find Me |
 
 ---
 
-### 5.11 Footer
+### 5.9 Footer
 
 **Content:**
 - Copyright line
 - Quick links: LinkedIn, GitHub, email
-- "Back to top" button
-- Optional: a light, one-line sign-off that fits the vibe ("Thanks for stopping by.")
+- Back to top button
+- Optional light sign-off: "Thanks for stopping by."
 
 ---
 
 ## 6. Visual Design Direction
 
+### The Core Aesthetic: Paper as Foundation
+
+The defining visual choice is that the entire site feels like it exists *on* recycled paper — not a website that approximates paper with a warm color, but something that makes a visitor want to touch the screen.
+
+This distinction matters. A flat `#F5F0E8` background with a subtle CSS noise filter reads as a design trend. A genuine recycled paper texture reads as a material choice — it has character, inconsistency, and warmth that can't be replicated with a hex code.
+
+### Paper Texture Implementation
+
+**Method: Tiled seamless texture image (Option B)**
+
+- Source a high-quality seamless scan of recycled or kraft paper — the kind with visible fiber variation, uneven density, soft grey-brown flecks, and slight color inconsistency across the surface. Free high-res sources: Unsplash, Subtle Patterns, Freepik (look for terms like "recycled paper texture seamless," "kraft paper scan," "handmade paper texture")
+- Export as WebP. Target file size: under 200KB. Compress enough for performance, but not so aggressively that fiber detail is lost — the irregularity is the point
+- Apply as `background-image` on the root/body with `background-repeat: repeat`. Tile size should be large enough (800px+) that the repeat seam is imperceptible at normal scroll speeds
+- No flat color fallback that looks intentional — use a mid-tone from the texture (`#D9CFC0` range) as a `background-color` only for the instant before the image loads
+- The paper texture is universal: it shows through cards, nav, sections, and the hero. Nothing sits on a flat color. Any overlay needed for contrast (e.g. on text-heavy cards) uses a semi-transparent tint, never an opaque fill that kills the texture beneath
+
+**What to look for in the reference texture (per uploaded sample):**
+- Visible fiber strands and variation — the surface is not uniform
+- Warm grey-beige base with slight color drift across the sheet
+- Occasional darker flecks or inclusions
+- Soft, not crisp — no sharp noise, no obvious digital grain pattern
+- The overall impression is tactile, aged, and handmade
+
 ### Palette
-Warm, sophisticated, not saccharine. Two directions to choose between:
 
-**Option A — Light Roast** (inspired by annasgarden / pauwee references)
-- Background: warm off-white / parchment (`#F5F0E8` range)
-- Text: deep espresso brown (`#2C1A0E` range)
-- Accent: muted terracotta or warm amber
-- Surface cards: cream with subtle paper texture
+Built from the texture, not imposed on it.
 
-**Option B — Dark Roast**
-- Background: deep roasted brown (`#1A0F08` range)
-- Text: warm cream
-- Accent: golden amber or soft coral
-- Surface cards: slightly lighter brown with texture
+- **Background:** The recycled paper texture itself — warm, variable, never flat
+- **Text:** Deep espresso brown (`#2C1A0E` range) — high contrast against the paper, grounded and warm
+- **Accent:** Muted terracotta or warm amber — used sparingly for CTAs, tags, hover states, active nav
+- **Surface cards:** Semi-transparent warm tint over the paper texture — cards feel like they're resting on the page, not floating above it
+- **What's Brewing tab exception:** Deep roasted brown background (`#1A0F08` range) with warm cream text and golden amber accents — the one intentional break from the paper aesthetic
 
 ### Typography
-- Display face: a characterful serif (e.g., Playfair Display, Cormorant Garamond, or Fraunces) — used for section headers and the hero name
-- Body face: a clean, readable sans-serif (e.g., Inter, DM Sans) — used for all professional content
-- Optional: a handwritten or chalk-style face for small decorative labels only (used sparingly)
 
-### Texture & Atmosphere
-- Subtle paper or linen texture on section backgrounds
-- A chalkboard-style element for the House Specialties and/or Skills section
-- Steam or subtle warmth motifs in the What's Brewing tab header and card treatments
-- No clip art, no literal coffee cup illustrations unless executed with real craft
+- **Display face:** A characterful serif — Playfair Display, Cormorant Garamond, or Fraunces. Used for the hero name, section headers, and project card titles. Should feel like something typeset by hand
+- **Body face:** A clean, readable sans-serif — Inter or DM Sans. All professional content: descriptions, bullets, metadata
+- **Decorative face:** A handwritten or chalk-style typeface — used *only* for small labels, nav flavor text, or section intros where a handwritten quality reinforces the paper aesthetic. Never on anything a recruiter needs to read quickly. One font, used sparingly
+
+### Handdrawn Coffee Doodles
+
+Decorative only. They never label, navigate, or explain anything — a recruiter who ignores them entirely reads the site perfectly.
+
+**Character:** Loose, sketchy, ink-on-paper style — consistent with the reference sketch sheet (coffee bags, muffins, teapots, espresso machines, cups, coffee beans, flowers in a carafe). Black or near-black linework with no fill, so the paper texture shows through them.
+
+**Placement principles:**
+- Scattered asymmetrically — margin edges, section transitions, hero background corners
+- Never centered, never symmetrical, never in a grid
+- Vary in size: a large teapot drifting off the hero edge, a small coffee bean near a section divider, a cup sketched lightly in the corner of a card
+- Slight rotation on each — nothing is perfectly upright
+- Low opacity or light linework so they recede behind content rather than competing with it
+- Implemented as inline SVGs or a hand-selected PNG sprite sheet, not icon fonts
+
+**Placement by section:**
+- **Hero:** The most doodle-dense zone — 3–5 elements scattered around the edges and background
+- **Meet the Barista:** 1–2 small elements near the section edge (a cup, a sprig)
+- **Section dividers:** A single small doodle centered or offset on the dividing line between major sections
+- **House Specialties:** A coffee bean or small bag near the margins — not near the skill tags themselves
+- **What's Brewing:** No doodles — the espresso-dark background is its own visual world; doodles would break the contrast shift
+- **Come Find Me:** Optional single element, very light
 
 ### Signature Element
-The **What's Brewing** tab — a dedicated dark-espresso-background view for future and upcoming projects. Confirmed work gets a warm glowing border and caramel accent; in-planning work is visually subdued. Animated steam wisps above the header make the section feel alive and intentional.
+
+The **What's Brewing** tab. A deliberate palette break: deep espresso background, warm cream text, golden amber accents. Confirmed upcoming work gets a warm glowing border; in-planning work is visually subdued. Animated steam wisps above the section header. The contrast makes the tab feel like a glimpse into the kitchen — something is being made.
 
 ---
 
 ## 7. Technical Requirements
 
 ### 7.1 Stack
+
 | Layer | Choice |
 |---|---|
 | Framework | React (Vite recommended) |
@@ -325,24 +341,35 @@ The **What's Brewing** tab — a dedicated dark-espresso-background view for fut
 | Hosting | GitHub Pages, Vercel, or Netlify |
 
 ### 7.2 Performance
+
 - Lighthouse score ≥ 90 on Performance, Accessibility, Best Practices
 - First Contentful Paint < 1.5s
-- Images lazy-loaded, compressed, WebP where possible
+- Paper texture image: WebP, compressed, loaded once and cached — not re-fetched per section
+- Doodle assets: inline SVGs preferred; if PNG, compressed and lazy-loaded below the fold
 - No unnecessary dependencies
 
 ### 7.3 Responsiveness
+
 - Fully responsive: mobile (375px+), tablet (768px+), desktop (1280px+)
 - Touch-friendly tap targets (min 44×44px)
 - No horizontal scroll on any viewport
+- Doodle placement adjusts on mobile — fewer elements, none that overlap readable content
 
 ### 7.4 Accessibility
-- Semantic HTML throughout
-- All images have meaningful alt text
-- Keyboard navigable
-- WCAG AA color contrast minimum
-- `prefers-reduced-motion` respected — no animations that can't be disabled
 
-### 7.5 Content Architecture
+- Semantic HTML throughout
+- All doodle images marked `aria-hidden="true"` — they are decorative and must be invisible to screen readers
+- All non-decorative images have meaningful alt text
+- Keyboard navigable
+- WCAG AA color contrast minimum — verify espresso text against paper texture at its lightest points
+- `prefers-reduced-motion` respected — steam animations and entrance transitions disabled
+
+### 7.5 Resume
+
+PDF hosted in `assets/resume.pdf`. The nav link and CTA buttons point to this path. To update the resume: replace the file at `assets/resume.pdf` and redeploy. The path never changes, so no component edits are needed. If you want to avoid redeploying for resume updates in the future, the path in `data/meta.js` can be swapped to an external URL (Google Drive direct link, Dropbox, etc.) — but repo-hosted is simpler and keeps everything self-contained for now.
+
+### 7.6 Content Architecture
+
 - All content in a `data/` directory as JS objects or JSON
 - No content hardcoded inside components
 - Theme labels stored separately from content so they can be updated without touching data
@@ -353,24 +380,24 @@ src/
 ├── sections/           # One component per section
 │   ├── Hero.jsx
 │   ├── MeetTheBarista.jsx
-│   ├── HouseSpecialties.jsx
 │   ├── WhereITrained.jsx
-│   ├── BehindTheCounter.jsx
 │   ├── TheMenu.jsx
-│   ├── TheToolkit.jsx
-│   ├── DailySpecials.jsx
+│   ├── HouseSpecialties.jsx
+│   ├── WhatsBrewing.jsx
 │   └── ComeFindMe.jsx
 ├── data/               # Content files
 │   ├── projects.js
-│   ├── experience.js
 │   ├── education.js
 │   ├── skills.js
-│   ├── specialties.js
-│   └── extras.js
-├── assets/             # Images, icons, resume PDF, textures
-├── styles/             # Global styles, design tokens
+│   ├── brewing.js
+│   └── meta.js         # Name, tagline, resume path, social links
+├── assets/
+│   ├── resume.pdf      # Replace this file to update resume; path stays fixed
+│   ├── textures/       # paper-texture.webp (seamless tile)
+│   └── doodles/        # SVGs or sprite sheet for handdrawn elements
+├── styles/
 │   ├── tokens.css      # Colors, typography, spacing
-│   └── global.css
+│   └── global.css      # Paper texture applied here at root level
 └── App.jsx
 ```
 
@@ -379,7 +406,8 @@ src/
 ## 8. Design Principles
 
 - **Theme as wrapper, not wall.** The coffee shop framing enhances personality; it never obscures professional content. If a visitor has to decode the metaphor to find the information they need, the metaphor has gone too far.
-- **Quantitative signal is explicit.** Finance and quant credentials are surfaced early (House Specialties) and tagged clearly throughout. A recruiter skimming for 30 seconds should find them.
+- **Paper is the material, not the color.** The recycled paper texture is a genuine material choice — inconsistent, tactile, and alive. It is never approximated with a flat color and a CSS filter.
+- **Doodles recede, content leads.** Handdrawn elements are atmosphere. They sit behind and beside the content, never in front of it. If a doodle draws the eye away from a name, title, or CTA, it's in the wrong place.
 - **Warm but not whimsical.** The palette and typography are sophisticated. This is a specialty coffee shop, not a cartoon café.
 - **Content-forward.** Design serves the content; decoration is earned. Every visual element should have a reason to exist.
 - **Honest copy.** First person, active voice. "I built X to solve Y" beats "Responsible for development of X."
@@ -388,9 +416,9 @@ src/
 
 ## 9. Pages / Routes
 
-Tab-based single-page application. `activeTab` state in `App.jsx` drives which sections render; no React Router needed. AnimatePresence handles fade transitions between tabs. Tabs: `home`, `about`, `menu`, `brewing`, `contact`.
+Tab-based single-page application. `activeTab` state in `App.jsx` drives which sections render; no React Router needed. AnimatePresence handles fade transitions between tabs.
 
-Behind the Counter (Experience) is not currently rendered in any tab — deferred to a future iteration.
+Tabs: `home`, `about`, `menu`, `brewing`, `contact`
 
 ---
 
@@ -398,9 +426,12 @@ Behind the Counter (Experience) is not currently rendered in any tab — deferre
 
 - Individual project case study pages (React Router + MDX)
 - Blog / writing section
+- Daily Specials section (certs, awards, volunteering) if content warrants it
+- Behind the Counter (experience timeline) if the framing shifts
 - CMS integration for non-technical content updates
 - Privacy-respecting analytics (Plausible or Fathom)
-- Dark / light roast toggle (dark mode)
+- Dark / Light Roast toggle (dark mode — the espresso palette already exists)
+- Custom domain integration (domain is owned; integration deferred)
 - Internationalization if relevant
 
 ---
@@ -410,23 +441,9 @@ Behind the Counter (Experience) is not currently rendered in any tab — deferre
 | Metric | Target |
 |---|---|
 | Time to first meaningful impression | < 5 seconds |
-| Finance/quant credentials findable | Within 10 seconds of landing |
+| Paper texture: tactile, not approximate | Passes the "want to touch the screen" test |
 | Mobile usability score (Lighthouse) | ≥ 90 |
 | Accessibility score (Lighthouse) | ≥ 90 |
 | Resume download | Always one click away |
 | Contact form | Functional and reliable |
-
----
-
-## 12. Open Questions
-
-Before development begins, resolve:
-
-1. **Light Roast or Dark Roast?** Warm parchment background vs. deep espresso — pick the palette direction.
-2. **Profile photo?** Real photo, illustrated avatar, or none? (A lightly illustrated or stylized photo works well with the café aesthetic.)
-3. **Which "Daily Specials" apply?** Certifications, awards, volunteering, publications?
-4. **Resume format?** PDF hosted in the repo, or link to an external source (e.g., a Google Doc)?
-5. **House Specialties content?** What are the 3–5 quant/finance items worth calling out explicitly?
-6. **Custom domain?** Own domain or `username.github.io`?
-7. **What's Brewing content?** Three future projects seeded (Pericles research, multi-factor model, financial knowledge graph). Add, remove, or adjust as plans solidify.
-8. **Behind the Counter (Experience)?** Section built but not currently in any tab. Add to The Menu tab or give it its own tab in a future iteration?
+| Doodles | Invisible to screen readers, never overlapping readable content |

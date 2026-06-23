@@ -1,80 +1,97 @@
-// HouseSpecialties — a "Today's Specials" chalkboard band that highlights quant/finance
-// credentials for recruiters scanning quickly. Each item links deeper into the page.
-
 import { motion } from 'framer-motion'
-import { TrendingUp, BarChart2, Code2, Briefcase, BookOpen } from 'lucide-react'
-import { specialties } from '../data/specialties'
-
-const iconMap = { TrendingUp, BarChart2, Code2, Briefcase, BookOpen }
+import { skills } from '../data/skills'
+import CoffeeBag from '../components/doodles/CoffeeBag'
 
 const container = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.09 } },
 }
 const item = {
-  hidden:  { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  hidden:  { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.48, ease: 'easeOut' } },
 }
 
 export default function HouseSpecialties() {
   return (
     <section
       id="house-specialties"
-      className="bg-chalkboard chalk-texture section-padding"
-      aria-label="House Specialties"
+      className="relative section-padding overflow-hidden"
+      aria-label="House Specialties — Skills"
     >
-      <div className="max-w-5xl mx-auto">
+      {/* Subtle warm tint panel behind content */}
+      <div className="absolute inset-0 bg-caramel/[0.04] pointer-events-none" aria-hidden="true" />
+
+      {/* Coffee bag doodle — margin decoration */}
+      <div className="absolute top-8 -right-8 md:-right-2 pointer-events-none" aria-hidden="true">
+        <CoffeeBag
+          className="text-espresso opacity-[0.12]"
+          style={{ width: '88px', transform: 'rotate(8deg)' }}
+        />
+      </div>
+
+      <div className="max-w-5xl mx-auto relative z-10">
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="mb-12"
         >
-          <p className="font-hand text-caramel/80 text-lg mb-1">today's specials</p>
-          <h2 className="font-serif text-4xl md:text-5xl text-white leading-tight">
+          <p className="font-hand text-caramel/90 text-lg mb-1">skills &amp; tools</p>
+          <h2 className="font-serif text-4xl md:text-5xl text-espresso leading-tight">
             House Specialties
           </h2>
-          <div className="mt-3 w-16 h-0.5 bg-caramel/50 mx-auto" aria-hidden="true" />
+          <div className="mt-4 flex items-center gap-5 text-xs font-sans text-espresso/45">
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-espresso/80 inline-block" aria-hidden="true" />
+              Proficient
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full border border-latte/50 inline-block" aria-hidden="true" />
+              Familiar
+            </span>
+          </div>
         </motion.div>
 
-        {/* Specialty cards */}
-        <motion.ul
+        {/* Skill groups */}
+        <motion.div
           variants={container}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-          role="list"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"
         >
-          {specialties.map(spec => {
-            const Icon = iconMap[spec.icon]
-            return (
-              <motion.li key={spec.id} variants={item}>
-                <a
-                  href={spec.anchor}
-                  onClick={e => {
-                    e.preventDefault()
-                    document.querySelector(spec.anchor)?.scrollIntoView({ behavior: 'smooth' })
-                  }}
-                  className="flex flex-col gap-3 p-5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-caramel/40 transition-all group cursor-pointer h-full"
-                  aria-label={`${spec.label} — jump to section`}
-                >
-                  <div className="flex items-center gap-3">
-                    {Icon && (
-                      <span className="p-2 rounded-lg bg-caramel/20 text-caramel group-hover:bg-caramel/30 transition-colors" aria-hidden="true">
-                        <Icon size={16} />
-                      </span>
-                    )}
-                    <span className="font-sans font-semibold text-white text-sm">{spec.label}</span>
-                  </div>
-                  <p className="font-sans text-xs text-white/55 leading-relaxed">{spec.description}</p>
-                </a>
-              </motion.li>
-            )
-          })}
-        </motion.ul>
+          {skills.map((group) => (
+            <motion.div
+              key={group.category}
+              variants={item}
+              className="rounded-2xl border border-latte/20 bg-cream/70 p-5 backdrop-blur-[1px]"
+            >
+              <p className="font-hand text-caramel text-sm mb-3">{group.category}</p>
+              <div className="flex flex-wrap gap-2">
+                {group.proficient.map(skill => (
+                  <span
+                    key={skill}
+                    className="px-3 py-1 rounded-full text-xs font-sans font-medium bg-espresso/85 text-parchment"
+                  >
+                    {skill}
+                  </span>
+                ))}
+                {group.familiar.map(skill => (
+                  <span
+                    key={skill}
+                    className="px-3 py-1 rounded-full text-xs font-sans text-espresso/55 border border-latte/35 bg-transparent"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
       </div>
     </section>
   )

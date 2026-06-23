@@ -1,16 +1,10 @@
-// App — tab-based routing via useState. Switching tabs scrolls to top and fades in new content.
-
 import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import Nav from './components/Nav'
-import Footer from './sections/Footer'
 import Hero from './sections/Hero'
 import MeetTheBarista from './sections/MeetTheBarista'
-import WhereITrained from './sections/WhereITrained'
-import HouseSpecialties from './sections/HouseSpecialties'
 import TheMenu from './sections/TheMenu'
-import TheToolkit from './sections/TheToolkit'
 import WhatsBrewing from './sections/WhatsBrewing'
 import ComeFindMe from './sections/ComeFindMe'
 
@@ -28,41 +22,29 @@ export default function App() {
   }, [activeTab])
 
   return (
-    <>
+    <div className="min-h-screen bg-canvas">
       <Nav activeTab={activeTab} onTabChange={setActiveTab} />
 
-      <main>
-        <AnimatePresence mode="wait">
-          <motion.div key={activeTab} variants={pageVariants} initial="initial" animate="animate" exit="exit">
-
-            {activeTab === 'home' && (
-              <Hero onNavigate={setActiveTab} />
-            )}
-
-            {activeTab === 'about' && (
-              <>
-                <MeetTheBarista />
-                <WhereITrained />
-              </>
-            )}
-
-            {activeTab === 'menu' && (
-              <>
-                <TheMenu />
-                <HouseSpecialties />
-                <TheToolkit />
-              </>
-            )}
-
-            {activeTab === 'brewing' && <WhatsBrewing />}
-
-            {activeTab === 'contact' && <ComeFindMe />}
-
-          </motion.div>
-        </AnimatePresence>
+      {/* Right-rail offset on desktop; top-bar offset on mobile */}
+      <main className="md:mr-[240px] pt-[52px] md:pt-0">
+        <div className="mx-auto px-6 md:px-16" style={{ maxWidth: '1000px', position: 'relative' }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              {activeTab === 'home'    && <Hero onNavigate={setActiveTab} />}
+              {activeTab === 'barista' && <MeetTheBarista />}
+              {activeTab === 'menu'    && <TheMenu />}
+              {activeTab === 'brewing' && <WhatsBrewing />}
+              {activeTab === 'contact' && <ComeFindMe />}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </main>
-
-      <Footer onTabChange={setActiveTab} />
-    </>
+    </div>
   )
 }

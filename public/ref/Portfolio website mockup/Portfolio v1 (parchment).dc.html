@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:wght@300;400;500;600&family=Caveat:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{ margin:0; background:#ECE3CF; }
+  ::selection{ background:#3A2D1F; color:#ECE3CF; }
+  body::before{
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:9999;
+    opacity:0.05; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:300px 300px;
+  }
+  @keyframes steamRise{ 0%{ transform:translateY(2px); opacity:0; } 30%{ opacity:.8; } 100%{ transform:translateY(-8px); opacity:0; } }
+  @keyframes floaty{ 0%,100%{ transform:translateY(0) rotate(var(--r,0deg)); } 50%{ transform:translateY(-7px) rotate(var(--r,0deg)); } }
+  .steam path{ animation:steamRise 2.6s ease-in-out infinite; }
+  .steam path:nth-child(2){ animation-delay:.5s; }
+  .steam path:nth-child(3){ animation-delay:1s; }
+  @media (prefers-reduced-motion: reduce){ .steam path{ animation:none; } html{ scroll-behavior:auto; } }
+</style>
+</helmet>
+
+<div style="font-family:'DM Sans',system-ui,sans-serif; color:#3A2D1F; background:#ECE3CF; min-height:100vh; -webkit-font-smoothing:antialiased;">
+
+  <!-- ===================== NAV ===================== -->
+  <nav style="position:sticky; top:0; z-index:100; background:rgba(236,227,207,0.88); backdrop-filter:blur(8px); border-bottom:1px solid rgba(58,45,31,0.14);">
+    <div style="max-width:1180px; margin:0 auto; padding:14px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
+      <div onClick="{{ goTop }}" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+        <svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#3A2D1F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14 h16 v6 a6 6 0 0 1 -6 6 h-4 a6 6 0 0 1 -6 -6 z"/><path d="M22 15 h3 a3 3 0 0 1 0 6 h-3"/><path d="M11 9 q1.5 -2 0 -4" class="x"/><path d="M16 9 q1.5 -2 0 -4"/></svg>
+        <span style="font-family:'Fraunces',serif; font-weight:600; font-size:19px; letter-spacing:-0.01em;">Sam Whitfield</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:4px;">
+        <sc-for list="{{ navLinks }}" as="link" hint-placeholder-count="6">
+          <button onClick="{{ link.go }}" style="position:relative; background:none; border:none; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; letter-spacing:0.02em; color:#3A2D1F; padding:8px 12px; cursor:pointer; opacity:0.78;" style-hover="opacity:1;">
+            {{ link.label }}
+            <sc-if value="{{ link.active }}" hint-placeholder-val="{{ true }}">
+              <span style="position:absolute; left:12px; right:12px; bottom:2px; height:2px; border-radius:2px; background:{{ accent }};"></span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+      <button onClick="{{ openResume }}" style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:#3A2D1F; background:none; border:1px solid rgba(58,45,31,0.4); border-radius:3px; padding:8px 14px; cursor:pointer; white-space:nowrap;" style-hover="background:#3A2D1F; color:#ECE3CF; border-color:#3A2D1F;">Full Résumé ↓</button>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <header id="hero" data-screen-label="Hero" style="position:relative; max-width:1180px; margin:0 auto; padding:96px 40px 110px; overflow:hidden;">
+    <!-- doodle marginalia -->
+    <svg class="steam" style="position:absolute; top:70px; right:330px;" width="34" height="40" viewBox="0 0 34 40" fill="none" stroke="#C2873B" stroke-width="2" stroke-linecap="round"><path d="M9 34 q-4 -8 0 -16 q4 -8 0 -14"/><path d="M17 34 q-4 -8 0 -16 q4 -8 0 -14"/><path d="M25 34 q-4 -8 0 -16 q4 -8 0 -14"/></svg>
+    <svg style="position:absolute; top:120px; right:150px; --r:8deg; animation:floaty 6s ease-in-out infinite;" width="180" height="170" viewBox="0 0 180 170" fill="none" stroke="#3A2D1F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"><path d="M40 70 h78 v34 a30 30 0 0 1 -30 30 h-18 a30 30 0 0 1 -30 -30 z"/><path d="M118 78 h14 a17 17 0 0 1 0 34 h-12"/><path d="M40 138 h78"/></svg>
+    <svg style="position:absolute; bottom:60px; right:90px; --r:-6deg; animation:floaty 7s ease-in-out infinite;" width="90" height="60" viewBox="0 0 90 60" fill="none" stroke="#3A2D1F" stroke-width="2" stroke-linecap="round"><ellipse cx="30" cy="30" rx="20" ry="13" transform="rotate(-25 30 30)"/><path d="M22 24 q8 6 16 12"/><ellipse cx="58" cy="34" rx="20" ry="13" transform="rotate(-25 58 34)"/><path d="M50 28 q8 6 16 12"/></svg>
+    <svg style="position:absolute; left:-10px; top:200px;" width="120" height="40" viewBox="0 0 120 40" fill="none" stroke="#C2873B" stroke-width="2.4" stroke-linecap="round"><path d="M4 20 q12 -16 24 0 q12 16 24 0 q12 -16 24 0 q12 16 24 0"/></svg>
+
+    <div style="position:relative; max-width:680px;">
+      <div data-reveal style="display:flex; align-items:center; gap:14px; margin-bottom:24px;">
+        <span style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.28em; text-transform:uppercase; color:#8B7B61;">Est. 2026 — Open Daily</span>
+        <span style="flex:0 0 40px; height:1px; background:rgba(58,45,31,0.3);"></span>
+      </div>
+      <h1 data-reveal style="font-family:'Fraunces',serif; font-weight:600; font-size:78px; line-height:0.98; letter-spacing:-0.025em; margin:0 0 8px;">Hello, I'm<br>Sam Whitfield.</h1>
+      <p data-reveal style="font-family:'Caveat',cursive; font-size:30px; color:#C2873B; margin:6px 0 22px; transform:rotate(-1.5deg);">finance student &amp; quant-curious developer</p>
+      <p data-reveal style="font-size:17px; line-height:1.75; color:#6B5E48; max-width:520px; margin:0 0 36px;">I build things at the intersection of markets and code — tidy backtests, honest dashboards, and the occasional weekend web app. Pull up a stool; the menu's below.</p>
+      <div data-reveal style="display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
+        <button onClick="{{ goMenu }}" style="font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; color:#ECE3CF; background:#3A2D1F; border:none; border-radius:3px; padding:14px 24px; cursor:pointer;" style-hover="background:#241B12;">See the Menu →</button>
+        <button onClick="{{ openResume }}" style="font-family:'DM Sans',sans-serif; font-size:15px; font-weight:500; color:#3A2D1F; background:none; border:1px solid rgba(58,45,31,0.45); border-radius:3px; padding:14px 24px; cursor:pointer;" style-hover="border-color:#3A2D1F; background:rgba(58,45,31,0.05);">Full Résumé ↓</button>
+        <span style="display:inline-flex; align-items:center; gap:7px; background:{{ accent }}; color:#241B12; font-size:12px; font-weight:600; letter-spacing:0.02em; padding:7px 13px 7px 10px; border-radius:999px;">
+          <svg class="steam" width="12" height="14" viewBox="0 0 12 14" fill="none" stroke="#241B12" stroke-width="1.5" stroke-linecap="round"><path d="M3 12 q-2 -4 0 -7"/><path d="M6 12 q-2 -4 0 -7"/><path d="M9 12 q-2 -4 0 -7"/></svg>
+          Currently Brewing: Rate Watch
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== HOUSE SPECIALTIES (dark band) ===================== -->
+  <section data-screen-label="House Specialties" style="background:#241B12; border-top:2px solid {{ accent }};">
+    <div style="max-width:1180px; margin:0 auto; padding:64px 40px;">
+      <h2 data-reveal style="font-family:'Fraunces',serif; font-weight:300; font-size:42px; color:#ECE3CF; margin:0 0 6px; letter-spacing:-0.01em;">House Specialties</h2>
+      <p data-reveal style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#9C8B6E; margin:0 0 40px;">What I'm known for around the shop</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:28px;">
+        <sc-for list="{{ specialties }}" as="sp" hint-placeholder-count="4">
+          <div onClick="{{ sp.go }}" data-reveal style="cursor:pointer; padding-top:22px; border-top:1px solid rgba(236,227,207,0.18);" style-hover="border-top-color:#C2873B;">
+            <div style="color:{{ accent }}; margin-bottom:14px;" innerHTML="{{ sp.icon }}"></div>
+            <h3 style="font-family:'Fraunces',serif; font-weight:500; font-size:21px; color:#ECE3CF; margin:0 0 8px;">{{ sp.label }}</h3>
+            <p style="font-size:14px; line-height:1.6; color:#A99A7C; margin:0;">{{ sp.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MEET THE BARISTA ===================== -->
+  <section id="barista" data-screen-label="Meet the Barista" style="max-width:1180px; margin:0 auto; padding:90px 40px;">
+    <div style="display:flex; align-items:flex-start; gap:14px; margin-bottom:36px;">
+      <svg width="30" height="34" viewBox="0 0 30 34" fill="none" stroke="#C2873B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-top:6px;"><path d="M15 32 v-12"/><path d="M15 21 q-8 0 -9 -9 q8 0 9 9"/><path d="M15 19 q8 -1 9 -10 q-8 1 -9 10"/></svg>
+      <div>
+        <p style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#8B7B61; margin:0 0 4px;">01 — About</p>
+        <h2 data-reveal style="font-family:'Fraunces',serif; font-weight:500; font-size:40px; margin:0; letter-spacing:-0.015em;">Meet the Barista</h2>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1.55fr 1fr; gap:56px; align-items:start;">
+      <div data-reveal style="font-size:17px; line-height:1.8; color:#574a37;">
+        <p style="margin:0 0 18px;">I'm a senior at Boston University studying Economics and Computer Science. I got hooked on markets the same way I got hooked on coffee — by being curious about what's actually happening underneath the surface, and refusing to take the easy answer.</p>
+        <p style="margin:0 0 18px;">These days I split my time between quant research (vol surfaces, backtests, the occasional Monte Carlo rabbit hole) and shipping clean, fast web apps. I care a lot about <em style="font-style:italic; color:#3A2D1F;">legible work</em> — code and analysis someone else can read at a glance and trust.</p>
+        <p style="margin:0;">Off the clock you'll find me dialing in a pour-over, reading market history, or rebuilding something that already works just to understand it better.</p>
+      </div>
+      <aside data-reveal style="background:#E4D9C0; border-left:3px solid {{ accent }}; border-radius:0 4px 4px 0; padding:24px 26px;">
+        <p style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#8B7B61; margin:0 0 12px;">What's in my cup right now</p>
+        <p style="font-family:'Fraunces',serif; font-style:italic; font-size:19px; line-height:1.5; color:#3A2D1F; margin:0 0 14px;">"Reading <span style="border-bottom:1.5px solid #C2873B;">Trading and Exchanges</span> by Larry Harris — slowly, with a notebook."</p>
+        <p style="font-size:14px; line-height:1.65; color:#6B5E48; margin:0;">Currently brewing a real-time interest-rate dashboard and learning my way around options market microstructure.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===================== THE MENU (projects) ===================== -->
+  <section id="menu" data-screen-label="The Menu" style="background:#E9DFC8; border-top:1px solid rgba(58,45,31,0.12); border-bottom:1px solid rgba(58,45,31,0.12);">
+    <div style="max-width:1100px; margin:0 auto; padding:84px 40px 90px; position:relative;">
+      <svg class="steam" style="position:absolute; top:54px; right:46px;" width="40" height="46" viewBox="0 0 40 46" fill="none" stroke="#C2873B" stroke-width="2" stroke-linecap="round"><path d="M11 40 q-4 -9 0 -18 q4 -9 0 -16"/><path d="M20 40 q-4 -9 0 -18 q4 -9 0 -16"/><path d="M29 40 q-4 -9 0 -18 q4 -9 0 -16"/></svg>
+
+      <div style="text-align:center; margin-bottom:14px;">
+        <p style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#8B7B61; margin:0 0 6px;">02 — Selected Work</p>
+        <h2 data-reveal style="font-family:'Caveat',cursive; font-weight:700; font-size:64px; line-height:1; margin:0; color:#3A2D1F; transform:rotate(-1deg);">The Menu</h2>
+        <p data-reveal style="font-family:'Fraunces',serif; font-style:italic; font-size:18px; color:#6B5E48; margin:10px 0 0;">Here's what's been served.</p>
+      </div>
+
+      <!-- filter pills -->
+      <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin:34px 0 8px;">
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+          <button onClick="{{ f.select }}" style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; padding:8px 16px; border-radius:999px; cursor:pointer; border:1px solid {{ f.border }}; background:{{ f.bg }}; color:{{ f.color }};">{{ f.label }}</button>
+        </sc-for>
+      </div>
+
+      <!-- menu board -->
+      <div style="background:#F1E9D6; border:1px solid rgba(58,45,31,0.16); border-radius:4px; padding:42px 48px; margin-top:26px; box-shadow:0 1px 3px rgba(58,45,31,0.06);">
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(440px,1fr)); column-gap:64px; row-gap:4px;">
+          <sc-for list="{{ menuItems }}" as="p" hint-placeholder-count="6">
+            <div onClick="{{ p.open }}" style="display:flex; align-items:baseline; gap:6px; padding:15px 8px; cursor:pointer; border-bottom:1px solid rgba(58,45,31,0.09);" style-hover="background:rgba(194,135,59,0.08);">
+              <div style="flex:1; min-width:0;">
+                <div style="display:flex; align-items:baseline; gap:10px;">
+                  <span style="font-family:'Space Mono',monospace; font-size:15px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#3A2D1F; white-space:nowrap;">{{ p.name }}</span>
+                  <sc-if value="{{ p.brewing }}" hint-placeholder-val="{{ true }}">
+                    <span style="display:inline-flex; align-items:center; gap:5px; background:{{ accent }}; color:#241B12; font-size:9px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:3px 7px; border-radius:999px; white-space:nowrap;">
+                      <svg class="steam" width="8" height="9" viewBox="0 0 8 9" fill="none" stroke="#241B12" stroke-width="1.4" stroke-linecap="round"><path d="M2 8 q-1.5 -3 0 -5"/><path d="M4 8 q-1.5 -3 0 -5"/><path d="M6 8 q-1.5 -3 0 -5"/></svg>Brewing
+                    </span>
+                  </sc-if>
+                </div>
+                <p style="font-size:13px; line-height:1.5; color:#7d6e55; margin:5px 0 0; font-style:italic; font-family:'Fraunces',serif;">{{ p.tagline }}</p>
+              </div>
+              <span style="flex:0 0 auto; align-self:flex-start; margin-top:3px; min-width:46px; height:1px; border-bottom:1px dotted rgba(58,45,31,0.4); transform:translateY(-3px);" innerHTML="{{ p.dots }}"></span>
+              <span style="font-family:'Space Mono',monospace; font-size:15px; font-weight:700; color:#C2873B; white-space:nowrap; align-self:flex-start; margin-top:2px;">{{ p.price }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <p style="font-family:'Caveat',cursive; font-size:18px; color:#8B7B61; text-align:right; margin:22px 0 0; transform:rotate(-0.5deg);">* prices are just for fun — tap any item for the real story</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BEHIND THE COUNTER (experience) ===================== -->
+  <section id="counter" data-screen-label="Experience" style="max-width:1180px; margin:0 auto; padding:90px 40px;">
+    <div style="margin-bottom:44px;">
+      <p style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#8B7B61; margin:0 0 4px;">03 — Experience</p>
+      <h2 data-reveal style="font-family:'Fraunces',serif; font-weight:500; font-size:40px; margin:0; letter-spacing:-0.015em;">Behind the Counter</h2>
+    </div>
+    <div style="position:relative; padding-left:34px;">
+      <span style="position:absolute; left:5px; top:6px; bottom:6px; width:1px; background:rgba(58,45,31,0.2);"></span>
+      <sc-for list="{{ experience }}" as="job" hint-placeholder-count="3">
+        <div data-reveal style="position:relative; margin-bottom:14px;">
+          <span style="position:absolute; left:-34px; top:7px; width:11px; height:11px; border-radius:999px; background:#ECE3CF; border:2px solid {{ job.dot }};"></span>
+          <div onClick="{{ job.toggle }}" style="cursor:pointer; padding:18px 22px; background:#E4D9C0; border:1px solid rgba(58,45,31,0.12); border-radius:5px;" style-hover="border-color:rgba(58,45,31,0.3);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+              <div>
+                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                  <h3 style="font-family:'Fraunces',serif; font-weight:600; font-size:21px; margin:0; letter-spacing:-0.01em;">{{ job.role }}</h3>
+                  <sc-if value="{{ job.finance }}" hint-placeholder-val="{{ true }}">
+                    <span style="background:#FAE9C4; color:#7a5a14; font-size:10px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; padding:3px 9px; border-radius:3px;">★ House Specialty</span>
+                  </sc-if>
+                </div>
+                <p style="font-size:15px; color:#6B5E48; margin:5px 0 0;">{{ job.company }} · {{ job.location }}</p>
+              </div>
+              <div style="display:flex; align-items:center; gap:14px;">
+                <span style="font-family:'Space Mono',monospace; font-size:12px; color:#8B7B61; white-space:nowrap;">{{ job.dates }}</span>
+                <span style="font-size:18px; color:#8B7B61; transform:{{ job.caret }}; transition:transform .2s;">⌄</span>
+              </div>
+            </div>
+            <sc-if value="{{ job.expanded }}" hint-placeholder-val="{{ true }}">
+              <div style="margin-top:16px; padding-top:16px; border-top:1px solid rgba(58,45,31,0.12);">
+                <ul style="margin:0 0 14px; padding-left:18px;">
+                  <sc-for list="{{ job.bullets }}" as="b" hint-placeholder-count="2">
+                    <li style="font-size:15px; line-height:1.65; color:#574a37; margin-bottom:7px;">{{ b }}</li>
+                  </sc-for>
+                </ul>
+                <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                  <sc-for list="{{ job.tags }}" as="t" hint-placeholder-count="3">
+                    <span style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; background:#3A2D1F; color:#ECE3CF; padding:3px 9px; border-radius:3px;">{{ t }}</span>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ===================== WHERE I TRAINED (education) ===================== -->
+  <section id="trained" data-screen-label="Education" style="background:#E9DFC8; border-top:1px solid rgba(58,45,31,0.12); border-bottom:1px solid rgba(58,45,31,0.12);">
+    <div style="max-width:1180px; margin:0 auto; padding:84px 40px;">
+      <div style="margin-bottom:40px;">
+        <p style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#8B7B61; margin:0 0 4px;">04 — Education</p>
+        <h2 data-reveal style="font-family:'Fraunces',serif; font-weight:500; font-size:40px; margin:0; letter-spacing:-0.015em;">Where I Trained</h2>
+      </div>
+      <sc-for list="{{ education }}" as="ed" hint-placeholder-count="2">
+        <div onClick="{{ ed.toggle }}" data-reveal style="cursor:pointer; padding:22px 0; border-top:1px solid rgba(58,45,31,0.16);" style-hover="opacity:0.9;">
+          <div style="display:flex; align-items:flex-start; gap:14px;">
+            <svg width="26" height="20" viewBox="0 0 30 20" fill="none" stroke="#8B7B61" stroke-width="1.7" stroke-linecap="round" style="margin-top:6px; flex:0 0 auto;"><ellipse cx="11" cy="10" rx="8" ry="5.5" transform="rotate(-20 11 10)"/><path d="M6 7 q5 4 10 7"/><ellipse cx="22" cy="12" rx="7" ry="4.5" transform="rotate(-20 22 12)"/></svg>
+            <div style="flex:1;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap;">
+                <h3 style="font-family:'Fraunces',serif; font-weight:600; font-size:23px; margin:0; letter-spacing:-0.01em;">{{ ed.school }}</h3>
+                <span style="font-family:'Space Mono',monospace; font-size:12px; color:#8B7B61; white-space:nowrap;">{{ ed.dates }}</span>
+              </div>
+              <p style="font-size:15px; color:#6B5E48; margin:6px 0 0;">{{ ed.degree }}</p>
+              <sc-if value="{{ ed.expanded }}" hint-placeholder-val="{{ true }}">
+                <div style="margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:18px;">
+                  <div>
+                    <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#8B7B61; margin:0 0 6px;">GPA</p>
+                    <p style="font-size:15px; color:#574a37; margin:0;">{{ ed.gpa }}</p>
+                  </div>
+                  <div>
+                    <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#8B7B61; margin:0 0 6px;">Coursework</p>
+                    <p style="font-size:15px; line-height:1.6; color:#574a37; margin:0;">{{ ed.coursework }}</p>
+                  </div>
+                  <div>
+                    <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#8B7B61; margin:0 0 6px;">Honors &amp; Activities</p>
+                    <p style="font-size:15px; line-height:1.6; color:#574a37; margin:0;">{{ ed.honors }}</p>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ===================== THE TOOLKIT (skills) ===================== -->
+  <section id="toolkit" data-screen-label="Toolkit" style="max-width:1180px; margin:0 auto; padding:90px 40px;">
+    <div style="margin-bottom:44px;">
+      <p style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#8B7B61; margin:0 0 4px;">05 — Skills</p>
+      <h2 data-reveal style="font-family:'Fraunces',serif; font-weight:500; font-size:40px; margin:0; letter-spacing:-0.015em;">The Toolkit</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:40px;">
+      <sc-for list="{{ skillGroups }}" as="g" hint-placeholder-count="5">
+        <div data-reveal>
+          <div style="display:flex; align-items:center; gap:9px; margin-bottom:16px;">
+            <span style="color:#C2873B;" innerHTML="{{ g.icon }}"></span>
+            <h3 style="font-family:'Fraunces',serif; font-weight:600; font-size:19px; margin:0;">{{ g.title }}</h3>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:7px;">
+            <sc-for list="{{ g.items }}" as="s" hint-placeholder-count="4">
+              <span style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; background:#E4D9C0; color:#3A2D1F; border:1px solid rgba(58,45,31,0.12); padding:5px 11px; border-radius:3px;">{{ s }}</span>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ===================== COME FIND ME (contact) ===================== -->
+  <section id="contact" data-screen-label="Contact" style="background:#241B12; color:#ECE3CF;">
+    <div style="max-width:760px; margin:0 auto; padding:84px 40px;">
+      <p style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#9C8B6E; margin:0 0 6px;">06 — Contact</p>
+      <h2 data-reveal style="font-family:'Caveat',cursive; font-weight:700; font-size:56px; line-height:1; margin:0 0 8px; color:#ECE3CF; transform:rotate(-1deg);">Pull up a chair.</h2>
+      <p data-reveal style="font-size:16px; line-height:1.7; color:#A99A7C; margin:0 0 36px; max-width:480px;">Got a role, a project, or just want to talk shop about markets and espresso? The counter's open.</p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+        <input placeholder="Your name" value="{{ formName }}" onInput="{{ setName }}" style="font-family:'DM Sans',sans-serif; font-size:15px; color:#ECE3CF; background:rgba(236,227,207,0.06); border:1px solid rgba(236,227,207,0.22); border-radius:4px; padding:13px 15px; outline:none;" style-focus="border-color:#C2873B;">
+        <input placeholder="Your email" value="{{ formEmail }}" onInput="{{ setEmail }}" style="font-family:'DM Sans',sans-serif; font-size:15px; color:#ECE3CF; background:rgba(236,227,207,0.06); border:1px solid rgba(236,227,207,0.22); border-radius:4px; padding:13px 15px; outline:none;" style-focus="border-color:#C2873B;">
+      </div>
+      <textarea placeholder="Your message" rows="4" value="{{ formMsg }}" onInput="{{ setMsg }}" style="width:100%; font-family:'DM Sans',sans-serif; font-size:15px; color:#ECE3CF; background:rgba(236,227,207,0.06); border:1px solid rgba(236,227,207,0.22); border-radius:4px; padding:13px 15px; outline:none; resize:vertical; margin-bottom:16px;" style-focus="border-color:#C2873B;"></textarea>
+      <button onClick="{{ sendMsg }}" style="font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; color:#241B12; background:{{ accent }}; border:none; border-radius:4px; padding:14px 28px; cursor:pointer;" style-hover="background:#D49a4a;">Send it over →</button>
+
+      <div style="display:flex; flex-wrap:wrap; gap:24px; margin-top:40px; padding-top:28px; border-top:1px solid rgba(236,227,207,0.16);">
+        <span onClick="{{ copyEmail }}" style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:#ECE3CF; cursor:pointer;" style-hover="color:#C2873B;">✉ {{ emailLabel }}</span>
+        <span style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:#A99A7C;">in / sam-whitfield</span>
+        <span style="display:inline-flex; align-items:center; gap:8px; font-size:14px; color:#A99A7C;">gh / samwhitfield</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer style="background:#1C150E; color:#A99A7C;">
+    <div style="max-width:1180px; margin:0 auto; padding:32px 40px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
+      <span style="font-size:13px;">© 2026 Sam Whitfield</span>
+      <div style="display:flex; gap:20px; opacity:0.4;">
+        <svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="#ECE3CF" stroke-width="1.6" stroke-linecap="round"><path d="M6 14 h16 v6 a6 6 0 0 1 -6 6 h-4 a6 6 0 0 1 -6 -6 z"/><path d="M22 15 h3 a3 3 0 0 1 0 6 h-3"/></svg>
+        <svg width="18" height="18" viewBox="0 0 30 20" fill="none" stroke="#ECE3CF" stroke-width="1.6" stroke-linecap="round"><ellipse cx="11" cy="10" rx="8" ry="5.5" transform="rotate(-20 11 10)"/><ellipse cx="22" cy="12" rx="7" ry="4.5" transform="rotate(-20 22 12)"/></svg>
+        <svg width="16" height="18" viewBox="0 0 30 34" fill="none" stroke="#ECE3CF" stroke-width="1.6" stroke-linecap="round"><path d="M15 32 v-12"/><path d="M15 21 q-8 0 -9 -9 q8 0 9 9"/><path d="M15 19 q8 -1 9 -10 q-8 1 -9 10"/></svg>
+      </div>
+      <span style="font-family:'Caveat',cursive; font-size:18px; color:#C2873B;">Thanks for stopping by ☕</span>
+      <button onClick="{{ goTop }}" style="background:none; border:none; color:#A99A7C; font-size:13px; cursor:pointer;" style-hover="color:#ECE3CF;">Back to top ↑</button>
+    </div>
+  </footer>
+
+  <!-- ===================== PROJECT MODAL ===================== -->
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position:fixed; inset:0; z-index:1000; background:rgba(28,21,14,0.5); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:24px;">
+      <div onClick="{{ stop }}" style="background:#F1E9D6; border-radius:6px; max-width:560px; width:100%; max-height:86vh; overflow:auto; padding:38px 40px; box-shadow:0 20px 60px rgba(28,21,14,0.4); position:relative;">
+        <button onClick="{{ closeModal }}" style="position:absolute; top:18px; right:20px; background:none; border:none; font-size:24px; line-height:1; color:#8B7B61; cursor:pointer;">×</button>
+        <p style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#8B7B61; margin:0 0 8px;">{{ current.categoryLabel }}</p>
+        <h3 style="font-family:'Fraunces',serif; font-weight:700; font-size:30px; margin:0 0 6px; letter-spacing:-0.015em;">{{ current.name }}</h3>
+        <p style="font-family:'Fraunces',serif; font-style:italic; font-size:17px; color:#6B5E48; margin:0 0 22px;">{{ current.tagline }}</p>
+        <p style="font-size:15px; line-height:1.75; color:#574a37; margin:0 0 22px;">{{ current.description }}</p>
+        <div style="background:#E4D9C0; border-left:3px solid {{ accent }}; border-radius:0 4px 4px 0; padding:14px 18px; margin-bottom:22px;">
+          <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#8B7B61; margin:0 0 5px;">Outcome</p>
+          <p style="font-size:15px; line-height:1.6; color:#3A2D1F; margin:0;">{{ current.outcome }}</p>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:24px;">
+          <sc-for list="{{ current.stack }}" as="t" hint-placeholder-count="3">
+            <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; background:#3A2D1F; color:#ECE3CF; padding:4px 10px; border-radius:3px;">{{ t }}</span>
+          </sc-for>
+        </div>
+        <div style="display:flex; gap:12px;">
+          <a href="#" style="font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; color:#ECE3CF; background:#3A2D1F; padding:10px 18px; border-radius:4px; text-decoration:none;">View on GitHub ↗</a>
+          <a href="#" style="font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500; color:#3A2D1F; border:1px solid rgba(58,45,31,0.4); padding:10px 18px; border-radius:4px; text-decoration:none;">Live Demo ↗</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================== TOAST ===================== -->
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; left:50%; bottom:32px; transform:translateX(-50%); z-index:1100; background:#241B12; color:#ECE3CF; border-left:3px solid {{ accent }}; border-radius:5px; padding:15px 22px; font-size:14px; box-shadow:0 12px 40px rgba(28,21,14,0.4);">{{ toastMsg }}</div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#C2873B&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = {
+    activeSection: 'hero',
+    filter: 'all',
+    openId: null,
+    expExp: {},
+    eduExp: { 'ed-1': true },
+    formName: '', formEmail: '', formMsg: '',
+    toast: false, toastMsg: '', copied: false,
+  };
+
+  // ---------- static data ----------
+  get accent(){ return this.props.accentColor || '#C2873B'; }
+
+  PROJECTS = [
+    { id:'p1', name:'Vol Surface Explorer', price:'4.5', tagline:'Interactive options implied-vol surface, live.', category:'finance-quant', brewing:true,
+      description:'A browser tool that pulls an options chain, fits an implied-vol surface, and lets you rotate and slice it in real time. Built to make abstract greeks feel tangible — drag to see how smile and term-structure move together.',
+      outcome:'Used by my fintech club as a teaching aid; renders a full surface in under 200ms.', stack:['Python','NumPy','Plotly','FastAPI'] },
+    { id:'p2', name:'Momentum Backtester', price:'5.0', tagline:'Vectorized cross-sectional momentum, honestly costed.', category:'finance-quant', brewing:false,
+      description:'A from-scratch backtesting engine for cross-sectional equity momentum, with realistic transaction costs, turnover constraints, and walk-forward validation. The whole point was resisting the urge to overfit.',
+      outcome:'Reproduced the classic momentum premium net of costs across 20 years of data.', stack:['Python','pandas','NumPy','Matplotlib'] },
+    { id:'p3', name:'Ledger', price:'3.5', tagline:'A personal finance tracker that respects your time.', category:'web', brewing:false,
+      description:'A clean, fast personal-finance app: import transactions, auto-categorize, and see where the money actually goes — no dark patterns, no upsells, no charts that lie.',
+      outcome:'~600 lines of category rules; categorizes 95% of transactions with zero manual input.', stack:['React','Node','PostgreSQL','Tailwind'] },
+    { id:'p4', name:'Campus Eats', price:'2.5', tagline:'Crowd-sourced dining-hall ratings, updated hourly.', category:'web', brewing:false,
+      description:'A small web app for rating dining-hall meals so students know what is worth the walk. Real-time menu sync and a dead-simple one-tap rating flow.',
+      outcome:'400+ student sign-ups in the first month on campus.', stack:['React','Firebase','Vite'] },
+    { id:'p5', name:'Churn Signals', price:'4.0', tagline:'Explainable churn prediction for a small SaaS.', category:'data-ml', brewing:false,
+      description:'An end-to-end churn model with a focus on explainability — SHAP values surfaced the two behaviors that actually predicted cancellation, which mattered more than the AUC.',
+      outcome:'Identified two leading indicators that informed a re-engagement email flow.', stack:['Python','scikit-learn','SHAP','Streamlit'] },
+    { id:'p6', name:'Rate Watch', price:'3.0', tagline:'A calm, real-time interest-rate dashboard.', category:'data-ml', brewing:true,
+      description:'A live dashboard tracking the yield curve, fed funds futures, and implied rate-cut probabilities — designed to be glanceable, not anxiety-inducing.',
+      outcome:'In progress — building the futures-implied probability model now.', stack:['Python','Streamlit','Plotly'] },
+  ];
+
+  CAT_LABEL = { 'all':'All', 'finance-quant':'Finance & Quant', 'web':'Web & Apps', 'data-ml':'Data & ML' };
+
+  EXPERIENCE = [
+    { id:'e1', role:'Software Engineering Intern', company:'Klaviyo', location:'Boston, MA', dates:'Summer 2025', finance:false,
+      bullets:['Shipped a customer-facing analytics widget used by 10k+ accounts, cutting a key dashboard load from 3.1s to 0.9s.','Wrote the data-fetching layer and worked with design to nail the empty and error states.'],
+      tags:['React','TypeScript','GraphQL','Python'] },
+    { id:'e2', role:'Quantitative Research Intern', company:'Hedgewood Capital', location:'New York, NY', dates:'Summer 2024', finance:true,
+      bullets:['Built a factor-attribution pipeline that explained 80% of a strategy\u2019s daily PnL variance.','Backtested three signal variants and documented why two of them did not survive transaction costs.'],
+      tags:['Python','pandas','SQL','Financial Modeling'] },
+    { id:'e3', role:'Treasurer & Quant Lead', company:'BU Fintech Club', location:'Boston, MA', dates:'2023 — Present', finance:true,
+      bullets:['Run a 30-person paper-trading research group and lead the weekly quant workshop.','Manage a real $5k club budget and the end-of-semester P&L report.'],
+      tags:['Excel','Statistics','Public Speaking'] },
+  ];
+
+  EDUCATION = [
+    { id:'ed-1', school:'Boston University', degree:'B.A. Economics & Computer Science · Minor in Statistics', dates:'2022 — 2026',
+      gpa:'3.8 / 4.0', coursework:'Stochastic Processes, Algorithms, Econometrics, Machine Learning, Derivatives', honors:'Dean\u2019s List (6×), Trustee Scholar, Fintech Club Treasurer' },
+    { id:'ed-2', school:'Coursework & Certificates', degree:'Self-directed — quant finance & ML', dates:'Ongoing',
+      gpa:'—', coursework:'CFA Level I candidate, Stanford ML (Coursera), QuantConnect bootcamp', honors:'Top 5% in inter-collegiate trading competition, 2024' },
+  ];
+
+  SKILLS = [
+    { title:'Languages', items:['Python','SQL','JavaScript','R','TypeScript'] },
+    { title:'Finance & Quant', items:['Financial Modeling','DCF Analysis','Backtesting','Statistics','Derivatives'] },
+    { title:'Frameworks', items:['React','pandas','NumPy','scikit-learn','Node'] },
+    { title:'Tools', items:['Git','Figma','PostgreSQL','Streamlit','Excel'] },
+    { title:'Concepts', items:['Portfolio Theory','Probability','Market Microstructure','Explainable ML'] },
+  ];
+
+  SPECIALTIES = [
+    { label:'Quant Research', desc:'Backtests and signal work that survive transaction costs.', target:'menu' },
+    { label:'Full-Stack Builds', desc:'Fast, legible web apps from data layer to UI.', target:'menu' },
+    { label:'Data & ML', desc:'Models I can actually explain to a stakeholder.', target:'menu' },
+    { label:'Always Learning', desc:'CFA L1, ML coursework, and a stack of market history.', target:'trained' },
+  ];
+
+  NAV = [
+    { id:'barista', label:'Barista' },
+    { id:'menu', label:'Menu' },
+    { id:'counter', label:'Counter' },
+    { id:'trained', label:'Training' },
+    { id:'toolkit', label:'Toolkit' },
+    { id:'contact', label:'Contact' },
+  ];
+
+  // ---------- icons (small inline doodles) ----------
+  ICONS = {
+    cup:'<svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14 h16 v6 a6 6 0 0 1 -6 6 h-4 a6 6 0 0 1 -6 -6 z"/><path d="M22 15 h3 a3 3 0 0 1 0 6 h-3"/><path d="M11 9 q1.5 -2 0 -4"/><path d="M16 9 q1.5 -2 0 -4"/></svg>',
+    machine:'<svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7 h16 v8 h-16 z"/><path d="M9 15 v3 h8 v-3"/><path d="M11 18 h4 v4 h-4 z"/><path d="M21 9 h6 v14"/><path d="M24 23 h-6"/></svg>',
+    beans:'<svg width="30" height="24" viewBox="0 0 36 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="9" ry="6" transform="rotate(-20 12 12)"/><path d="M6 8 q6 5 12 8"/><ellipse cx="25" cy="14" rx="8" ry="5" transform="rotate(-20 25 14)"/></svg>',
+    kettle:'<svg width="30" height="28" viewBox="0 0 32 30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 14 h14 v8 a4 4 0 0 1 -4 4 h-6 a4 4 0 0 1 -4 -4 z"/><path d="M21 16 q6 -1 7 -9"/><path d="M11 14 v-3 h6 v3"/></svg>',
+    plant:'<svg width="26" height="30" viewBox="0 0 30 34" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 32 v-12"/><path d="M15 21 q-8 0 -9 -9 q8 0 9 9"/><path d="M15 19 q8 -1 9 -10 q-8 1 -9 10"/></svg>',
+    moka:'<svg width="28" height="30" viewBox="0 0 30 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16 l-2 12 h14 l-2 -12 z"/><path d="M8 16 h10 l2 -6 h-14 z"/><path d="M18 12 h6 v5"/></svg>',
+  };
+
+  // ---------- nav / scroll ----------
+  componentDidMount(){
+    this._onScroll = () => {
+      const ids = ['hero','barista','menu','counter','trained','toolkit','contact'];
+      const y = window.scrollY + 120;
+      let cur = 'hero';
+      for (const id of ids){ const el = document.getElementById(id); if (el && el.offsetTop <= y) cur = id; }
+      if (cur !== this.state.activeSection) this.setState({ activeSection: cur });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive:true });
+    this._onScroll();
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      const els = Array.from(document.querySelectorAll('[data-reveal]'));
+      els.forEach(el => { el.style.opacity='0'; el.style.transform='translateY(20px)'; el.style.transition='opacity .55s ease, transform .55s ease'; });
+      this._io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='none'; this._io.unobserve(e.target); } });
+      }, { threshold:0.12 });
+      els.forEach(el => this._io.observe(el));
+    }
+  }
+  componentWillUnmount(){ window.removeEventListener('scroll', this._onScroll); if(this._io) this._io.disconnect(); }
+
+  go(id){ const el = document.getElementById(id); if(!el) return; const top = el.getBoundingClientRect().top + window.scrollY - 64; window.scrollTo({ top, behavior:'smooth' }); }
+  goTop(){ window.scrollTo({ top:0, behavior:'smooth' }); }
+
+  showToast(msg){ this.setState({ toast:true, toastMsg:msg }); clearTimeout(this._tt); this._tt = setTimeout(()=>this.setState({ toast:false }), 3200); }
+
+  // ---------- render ----------
+  renderVals(){
+    const accent = this.accent;
+    const navLinks = this.NAV.map(n => ({ label:n.label, active: this.state.activeSection===n.id, go: ()=>this.go(n.id) }));
+
+    const filters = ['all','finance-quant','web','data-ml'].map(c => {
+      const on = this.state.filter===c;
+      return { label:this.CAT_LABEL[c], select:()=>this.setState({filter:c}),
+        bg: on?'#3A2D1F':'transparent', color: on?'#ECE3CF':'#3A2D1F', border: on?'#3A2D1F':'rgba(58,45,31,0.3)' };
+    });
+
+    const menuItems = this.PROJECTS.filter(p => this.state.filter==='all' || p.category===this.state.filter)
+      .map(p => ({ ...p, dots:'', open:()=>this.setState({openId:p.id}) }));
+
+    const cur = this.PROJECTS.find(p => p.id===this.state.openId);
+    const current = cur ? { ...cur, categoryLabel:this.CAT_LABEL[cur.category] } : {};
+
+    const experience = this.EXPERIENCE.map(j => {
+      const expanded = !!this.state.expExp[j.id];
+      return { ...j, expanded, caret: expanded?'rotate(180deg)':'rotate(0deg)', dot: j.finance?accent:'#8B7B61',
+        toggle:()=>this.setState(s=>({ expExp:{...s.expExp, [j.id]:!s.expExp[j.id]} })) };
+    });
+
+    const education = this.EDUCATION.map(e => ({ ...e, expanded: !!this.state.eduExp[e.id],
+      toggle:()=>this.setState(s=>({ eduExp:{...s.eduExp, [e.id]:!s.eduExp[e.id]} })) }));
+
+    const specIcons = [this.ICONS.machine, this.ICONS.cup, this.ICONS.moka, this.ICONS.beans];
+    const specialties = this.SPECIALTIES.map((s,i)=>({ ...s, icon:specIcons[i], go:()=>this.go(s.target) }));
+
+    const grpIcons = [this.ICONS.machine, this.ICONS.beans, this.ICONS.cup, this.ICONS.kettle, this.ICONS.plant];
+    const skillGroups = this.SKILLS.map((g,i)=>({ ...g, icon:grpIcons[i] }));
+
+    return {
+      accent, navLinks, filters, menuItems, specialties, skillGroups,
+      experience, education,
+      modalOpen: !!cur, current, closeModal:()=>this.setState({openId:null}), stop:(e)=>e.stopPropagation(),
+      goMenu:()=>this.go('menu'), goTop:()=>this.goTop(),
+      openResume:()=>this.showToast('Résumé download is a placeholder in this mockup.'),
+      formName:this.state.formName, formEmail:this.state.formEmail, formMsg:this.state.formMsg,
+      setName:(e)=>this.setState({formName:e.target.value}),
+      setEmail:(e)=>this.setState({formEmail:e.target.value}),
+      setMsg:(e)=>this.setState({formMsg:e.target.value}),
+      sendMsg:()=>{ this.showToast("Your message is brewing. I'll be in touch soon ☕"); this.setState({formName:'',formEmail:'',formMsg:''}); },
+      emailLabel: this.state.copied ? 'copied!' : 'sam@whitfield.dev',
+      copyEmail:()=>{ try{ navigator.clipboard && navigator.clipboard.writeText('sam@whitfield.dev'); }catch(e){} this.setState({copied:true}); setTimeout(()=>this.setState({copied:false}),1500); },
+      toast:this.state.toast, toastMsg:this.state.toastMsg,
+    };
+  }
+}
+</script>
+</body>
+</html>
